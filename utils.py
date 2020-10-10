@@ -30,8 +30,18 @@ def body_strip_tags(html):
     return s.get_data()
 
 
+def remove_filpaths(x):
+    return re.sub(r'[[\w\-\:]*\/[\w\-\:]*\/[\w\-\:]*]*|[[\w\-\:\.]*\\[\w\-\:]*\\[\w\-\:]*]*', "", x)
+
+
 def just_text(x):
-    return re.sub("\n<pre><code>.*?</code></pre>|</p>|<p>|<code>.*?</code>|\n|<a.*>.*?</a>", " ", x, flags=re.DOTALL)
+    """Method to clear out code-block, p-tags and hyperlinks
+    Args:
+        x:  html string
+    Returns:
+        cleaned string
+    """
+    return re.sub("\n<pre><code>.*?</code></pre>|</p>|<p>|<code>.*?</code>|\n|<a.*>.*?</a>", "", x, flags=re.DOTALL)
 
 
 def filter_sentence(x):
@@ -45,7 +55,7 @@ def filter_sentence(x):
 def get_tag_list(text):
     regex = r"<|>"  # "<.*?>.*?<\/.*?>"
     split_list = re.split(regex, text, maxsplit=0, flags=re.IGNORECASE)
-    return filter(lambda x: x != '', map(lambda x: x.strip(), split_list))
+    return ','.join(filter(lambda x: x != '', map(lambda x: x.strip(), split_list)))
 
 # TODO: Remove these if not used anywhere
 # def remove_internal_tags(text):
