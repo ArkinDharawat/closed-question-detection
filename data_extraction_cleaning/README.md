@@ -1,6 +1,6 @@
 Data aggregation and cleaning
 --
-This folder contains files and notebooks for data-cleaning
+This folder contains files and notebooks for data-cleaning. Make sure to install `spacy` before running these files/notebooks.
 
 ### Example
 ```python
