@@ -1,13 +1,13 @@
 import re
 from bs4 import BeautifulSoup
 import string
-
-JOIN_CHAR = ' '
-
 """
 Taken from: https://www.kaggle.com/ojwatson/stack-overflow-rudeness-fill-in-blanks#3.-Build-our-data-set
 """
 from html.parser import HTMLParser
+
+JOIN_CHAR = ' '
+TOKEN_SEP = '|'
 
 
 class MLStripper(HTMLParser):
@@ -41,7 +41,7 @@ def just_text(x):
     Returns:
         cleaned string
     """
-    return re.sub("\n<pre><code>.*?</code></pre>|</p>|<p>|<code>.*?</code>|\n|<a.*>.*?</a>", "", x, flags=re.DOTALL)
+    return re.sub("\n<pre><code>.*?</code></pre>|</p>|<p>|<code>.*?</code>|\n|\t|\r|<a.*>.*?</a>", "", x, flags=re.DOTALL)
 
 
 def filter_sentence(x):
@@ -55,7 +55,7 @@ def filter_sentence(x):
 def get_tag_list(text):
     regex = r"<|>"  # "<.*?>.*?<\/.*?>"
     split_list = re.split(regex, text, maxsplit=0, flags=re.IGNORECASE)
-    return ','.join(filter(lambda x: x != '', map(lambda x: x.strip(), split_list)))
+    return TOKEN_SEP.join(filter(lambda x: x != '', map(lambda x: x.strip(), split_list)))
 
 # TODO: Remove these if not used anywhere
 # def remove_internal_tags(text):

@@ -6,7 +6,7 @@ import os
 import pandas as pd
 from spacy.lang.en import English
 
-from utils import body_strip_tags, just_text, filter_sentence, get_tag_list, remove_filpaths
+from utils import body_strip_tags, just_text, filter_sentence, get_tag_list, remove_filpaths, TOKEN_SEP
 
 FOLDER_PATH = "../so_dataset"
 nlp = English()
@@ -22,7 +22,7 @@ def tokenize(text):
             continue
         else:
             tokens.append(token.text)
-    return '|'.join(tokens)
+    return TOKEN_SEP.join(tokens)
 
 
 def main():
@@ -35,16 +35,20 @@ def main():
     df_total_features['body'] = df_total_features['Body'].apply(just_text).apply(body_strip_tags)  # clean out tags
     df_total_features['body'] = df_total_features['body'].apply(remove_filpaths)  # remove filepaths
 
-    df_cleaned = df_total_features.dropna(how='any')
-
+    df_cleaned = df_total_features.dropna(how='any')  # clear nan
+    print(f'size after clearning nans {df_cleaned.shape}')
     # tokenize body and title
     df_cleaned['title'] = df_cleaned['title'].apply(tokenize)
     df_cleaned['body'] = df_cleaned['body'].apply(tokenize)
+    # re-name columns
+    df_cleaned['qid'] = df_cleaned['Qid']
     df_cleaned['label'] = df_cleaned['Label']
 
     # write only feature columns
-    feature_columns = ['Qid', 'title', 'body', 'tag_list', 'label']
+    feature_columns = ['qid', 'title', 'body', 'tag_list', 'label']
     df_cleaned = df_cleaned[feature_columns]  # get only featured columns
+    df_cleaned = df_cleaned.replace(r'^\s*$', pd.NA, regex=True)  # empty string as NaNs
+    df_cleaned = df_cleaned.dropna(how='any')  # clear nan
     df_cleaned.to_csv(os.path.join(FOLDER_PATH, "so_questions_cleaned.csv"), index=False)
 
 
