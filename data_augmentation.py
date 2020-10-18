@@ -4,6 +4,11 @@ import numpy as np
 import nlpaug.augmenter.word as naw
 
 FOLDER_PATH = "so_dataset"
+"""
+Download w2v embs
+- pip install gdown
+- gdown --id  0B7XkCwpI5KDYNlNUTTlSS21pQmM
+"""
 MODEL_DIR = "./"  # path to google. glove and other embs models
 
 
