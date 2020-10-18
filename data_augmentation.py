@@ -21,7 +21,7 @@ def augment_text(text_list, num_aug, aug_prob, max_words):
     augmentations_list = get_augmentations(max_words_to_augment=max_words, aug_percentage=aug_prob)
     augmentations = np.random.choice(augmentations_list, replace=True, size=num_aug)
     for aug in augmentations:
-        augmented_text.extend(aug.augment(text_list))
+        augmented_text.extend(aug.augment(text_list, n=1, num_thread=16))
     return augmented_text
 
 
@@ -38,3 +38,7 @@ def main():
     # debug
     import code
     code.interact(local={**locals(), **globals()})
+
+
+if __name__ == '__main__':
+    main()
