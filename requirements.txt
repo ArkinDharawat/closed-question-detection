@@ -20,6 +20,7 @@ mccabe==0.6.1
 mqtt==0.0.1
 multidict==4.7.4
 nlpaug==1.0.1
+nltk==3.5
 numpy==1.19.2
 packaging==20.4
 paho-mqtt==1.5.0
