@@ -6,7 +6,7 @@ import os
 import pandas as pd
 from spacy.lang.en import English
 
-from utils import body_strip_tags, just_text, filter_sentence, get_tag_list, remove_filpaths, TOKEN_SEP
+from data_extraction_cleaning.utils import body_strip_tags, just_text, filter_sentence, get_tag_list, remove_filpaths, TOKEN_SEP
 
 FOLDER_PATH = "../so_dataset"
 nlp = English()
