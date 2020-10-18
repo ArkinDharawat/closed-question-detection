@@ -26,13 +26,15 @@ def augment_text(text_list, num_aug, aug_prob, max_words):
 
 
 def main():
+    # TODO: make these parse augs
     augmented_dataset = os.path.join(FOLDER_PATH, "so_questions_augmented.csv")
     max_words = 3
     aug_prob = 0.05
     num_aug = 3
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
-    q_titles = df['title'].apply(lambda x: x.split('|'))
+    k = 32 # remove later on
+    q_titles = df['title'].iloc[k].apply(lambda x: x.split('|'))
     augmented_titles = augment_text(q_titles, aug_prob, max_words, num_aug)
 
     # debug
