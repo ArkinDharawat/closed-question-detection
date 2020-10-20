@@ -24,12 +24,12 @@ def get_augmentations(max_words_to_augment=2, aug_percentage=0.01, w2v_top_k=5):
 
 
 def augment_text(text, num_aug, aug_prob, max_words):
-    augmented_text = text
+    augmented_text = ' '.join(text)
     augmentations_list = get_augmentations(max_words_to_augment=max_words, aug_percentage=aug_prob)
     augmentations = np.random.choice(augmentations_list, replace=True, size=num_aug)
     for aug in augmentations:
         augmented_text = aug.augment(augmented_text, n=1, num_thread=1)
-    return augmented_text
+    return augmented_text.split(' ')
 
 
 def main():
