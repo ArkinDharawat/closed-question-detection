@@ -23,12 +23,12 @@ def get_augmentations(max_words_to_augment=2, aug_percentage=0.01, w2v_top_k=5):
     return [aug_random_swap, aug_delete_swap]
 
 
-def augment_text(text_list, num_aug, aug_prob, max_words):
-    augmented_text = []
+def augment_text(text, num_aug, aug_prob, max_words):
+    augmented_text = text
     augmentations_list = get_augmentations(max_words_to_augment=max_words, aug_percentage=aug_prob)
     augmentations = np.random.choice(augmentations_list, replace=True, size=num_aug)
     for aug in augmentations:
-        augmented_text.append(aug.augment(text_list, n=1, num_thread=1))
+        augmented_text = aug.augment(augmented_text, n=1, num_thread=1)
     return augmented_text
 
 
@@ -37,15 +37,12 @@ def main():
     augmented_dataset = os.path.join(FOLDER_PATH, "so_questions_augmented.csv")
     max_words = 3
     aug_prob = 0.05
-    num_aug = 3
+    num_aug = 2
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
-    # TODO: filter only positive labels
-    pos_index = df[df['label'] > 0].index
-    q_titles = df['title'].apply(lambda x: x.split('|')).iloc[pos_index]
 
-    def augment_single_text(title):
-        return augment_text(title, num_aug, aug_prob, max_words)
+    pos_index = df[df['label'] > 0].index  # postive labels
+    q_titles = df['title'].apply(lambda x: x.split('|')).iloc[pos_index]
 
     augmented_titles = Parallel(n_jobs=8, backend="multiprocessing")(
         delayed(augment_text)(title, num_aug, aug_prob, max_words) for title in q_titles)
