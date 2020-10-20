@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import numpy as np
 import nlpaug.augmenter.word as naw
+from joblib import Parallel, delayed
 
 FOLDER_PATH = "so_dataset"
 """
@@ -26,7 +27,7 @@ def augment_text(text_list, num_aug, aug_prob, max_words):
     augmentations_list = get_augmentations(max_words_to_augment=max_words, aug_percentage=aug_prob)
     augmentations = np.random.choice(augmentations_list, replace=True, size=num_aug)
     for aug in augmentations:
-        augmented_text.extend(aug.augment(text_list, n=1, num_thread=16))
+        augmented_text.append(aug.augment(text_list, n=1, num_thread=1))
     return augmented_text
 
 
@@ -38,9 +39,15 @@ def main():
     num_aug = 3
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
-    k = 16 # remove later on
-    q_titles = df['title'].apply(lambda x: x.split('|')).iloc[k]
-    augmented_titles = augment_text(q_titles, num_aug, aug_prob, max_words)
+    k = 10  # remove later on
+    q_titles = df['title'].apply(lambda x: x.split('|')).iloc[0:k]
+
+    def augment_single_text(title):
+        return augment_text(title, num_aug, aug_prob, max_words)
+
+    augmented_titles = Parallel(n_jobs=8, backend="multiprocessing")(
+        delayed(augment_text)(title, num_aug, aug_prob, max_words) for title in q_titles)
+    # augmented_titles = augment_text(q_titles, num_aug, aug_prob, max_words)
 
     # debug
     import code
