@@ -42,10 +42,11 @@ def augment_text(text, num_aug, aug_prob, max_words):
     augmentations = np.random.choice(augmentations_list, replace=True, size=num_aug)
     for aug in augmentations:
         augmented_text = aug.augment(augmented_text, n=1, num_thread=1)
-    return augmented_text
+    return augmented_text.replace(' ', '|')
 
 
 def main():
+    global DEL_SINGLE
     # TODO: make these parse augs
     augmented_dataset = os.path.join(FOLDER_PATH, "so_questions_augmented.csv")
     max_words = 3
@@ -55,11 +56,17 @@ def main():
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
 
     pos_index = df[df['label'] > 0].index  # postive labels
-    # q_titles = df['title'].apply(lambda x: x.split('|')).iloc[pos_index]
+
     q_titles = df['title'].iloc[pos_index]
+    q_bodies = df['body'].iloc[pos_index]
 
     augmented_titles = Parallel(n_jobs=8, backend="multiprocessing")(
         delayed(augment_text)(title, num_aug, aug_prob, max_words) for title in q_titles)
+
+    DEL_SINGLE = False  # delete multiple tokens
+    max_words = 10  # increase maximum words to augment
+    augmented_bodies = Parallel(n_jobs=8, backend="multiprocessing")(
+        delayed(augment_text)(title, num_aug, aug_prob, max_words) for title in q_bodies)
 
     # debug
     import code
