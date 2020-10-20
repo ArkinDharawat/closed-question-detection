@@ -68,9 +68,22 @@ def main():
     augmented_bodies = Parallel(n_jobs=8, backend="multiprocessing")(
         delayed(augment_text)(title, num_aug, aug_prob, max_words) for title in q_bodies)
 
+    aug_tags = df['tag_list'].iloc[pos_index]
+    aug_labels = df['label'].iloc[pos_index]
+
+    data_dict = {
+                 'title': augmented_titles,
+                 'body': augmented_bodies,
+                 'tag_list': aug_tags,
+                 'label': aug_labels
+                 }
+    df_augmented = pd.DataFrame.from_recordsdata_dict(data_dict)
+
     # debug
     import code
     code.interact(local={**locals(), **globals()})
+
+
 
 
 if __name__ == '__main__':
