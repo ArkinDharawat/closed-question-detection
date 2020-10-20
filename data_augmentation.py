@@ -40,7 +40,7 @@ def main():
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
     k = 16 # remove later on
     q_titles = df['title'].apply(lambda x: x.split('|')).iloc[k]
-    augmented_titles = augment_text(q_titles, aug_prob, max_words, num_aug)
+    augmented_titles = augment_text(q_titles, num_aug, aug_prob, max_words)
 
     # debug
     import code
