@@ -40,7 +40,9 @@ def main():
     num_aug = 3
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
-    q_titles = df['title'].apply(lambda x: x.split('|'))
+    # TODO: filter only positive labels
+    pos_index = df[df['label'] > 0].index
+    q_titles = df['title'].apply(lambda x: x.split('|')).iloc[pos_index]
 
     def augment_single_text(title):
         return augment_text(title, num_aug, aug_prob, max_words)
