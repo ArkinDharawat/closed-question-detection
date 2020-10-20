@@ -16,9 +16,9 @@ def get_augmentations(max_words_to_augment=2, aug_percentage=0.01, w2v_top_k=5):
     word2vec_model_path = os.path.join(MODEL_DIR, 'GoogleNews-vectors-negative300.bin')
     aug_random_swap = naw.RandomWordAug(action="swap", aug_max=max_words_to_augment, aug_p=aug_percentage)
     aug_delete_swap = naw.RandomWordAug(action="delete", aug_max=max_words_to_augment, aug_p=aug_percentage)
-    aug_w2v = naw.WordEmbsAug(model_type='word2vec', model_path=word2vec_model_path, action="substitute",
-                              top_k=w2v_top_k)
-    return [aug_w2v, aug_random_swap, aug_delete_swap]
+    # aug_w2v = naw.WordEmbsAug(model_type='word2vec', model_path=word2vec_model_path, action="substitute", top_k=w2v_top_k)
+    # return [aug_w2v, aug_random_swap, aug_delete_swap]
+    return [aug_random_swap, aug_delete_swap]
 
 
 def augment_text(text_list, num_aug, aug_prob, max_words):
@@ -38,7 +38,7 @@ def main():
     num_aug = 3
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
-    k = 32 # remove later on
+    k = 16 # remove later on
     q_titles = df['title'].apply(lambda x: x.split('|')).iloc[k]
     augmented_titles = augment_text(q_titles, aug_prob, max_words, num_aug)
 
