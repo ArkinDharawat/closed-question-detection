@@ -77,7 +77,7 @@ def main():
                  'tag_list': aug_tags,
                  'label': aug_labels
                  }
-    df_augmented = pd.DataFrame.from_recordsdata_dict(data_dict)
+    df_augmented = pd.DataFrame.from_records(data_dict)
 
     # debug
     import code
