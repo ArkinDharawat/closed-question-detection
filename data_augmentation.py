@@ -72,18 +72,20 @@ def main():
     aug_labels = df['label'].iloc[pos_index]
 
     data_dict = {
-                 'title': augmented_titles,
-                 'body': augmented_bodies,
-                 'tag_list': aug_tags,
-                 'label': aug_labels
-                 }
+        'title': augmented_titles,
+        'body': augmented_bodies,
+        'tag_list': aug_tags,
+        'label': aug_labels
+    }
     df_augmented = pd.DataFrame.from_records(data_dict)
 
     # debug
     import code
     code.interact(local={**locals(), **globals()})
 
-
+    df_new = df.append(df_augmented)
+    df_new['qid'] = df_new['qid'].fillna(0)  # all augmented quids are 0
+    df_new.to_csv(augmented_dataset, index=False)
 
 
 if __name__ == '__main__':
