@@ -36,7 +36,7 @@ def main():
     # TODO: make these parse augs
     augmented_dataset = os.path.join(FOLDER_PATH, "so_questions_augmented.csv")
     max_words = 3
-    aug_prob = None  # 0.05
+    aug_prob = 0.1
     num_aug = 2
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
