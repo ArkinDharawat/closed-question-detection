@@ -47,7 +47,7 @@ def augment_text(text, num_aug, aug_prob, max_words):
 
 def main():
     global DEL_SINGLE
-    # TODO: make these parse augs
+    # TODO: make these parse args
     augmented_dataset = os.path.join(FOLDER_PATH, "so_questions_augmented.csv")
     max_words = 3
     aug_prob = 0.1
