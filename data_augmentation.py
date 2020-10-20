@@ -40,14 +40,13 @@ def main():
     num_aug = 3
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
-    q_titles = df['title'].apply(lambda x: x.split('|')).iloc[0]
+    q_titles = df['title'].apply(lambda x: x.split('|'))
 
     def augment_single_text(title):
         return augment_text(title, num_aug, aug_prob, max_words)
 
     augmented_titles = Parallel(n_jobs=8, backend="multiprocessing")(
         delayed(augment_text)(title, num_aug, aug_prob, max_words) for title in q_titles)
-
 
     # debug
     import code
