@@ -33,7 +33,7 @@ def train_majority_classifier():
     # get predicted labels
     y_pred_test = np.ones(y_test.shape) * majority_label
 
-    # generate metrics
+    # generate metrics in folder
     get_metrics(y_pred=y_pred_test, y_true=y_test, save_dir="./", model_name='majority_classifier')
 
 
