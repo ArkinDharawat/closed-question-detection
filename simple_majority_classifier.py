@@ -28,7 +28,7 @@ def train_majority_classifier():
                                                         random_state=random_seed)
 
     # train model
-    majority_label = np.argmax(np.bincount(y_train))
+    majority_label = np.argmax(np.bincount(y_train))  # get majority label
 
     # get predicted labels
     y_pred_test = np.ones(y_test.shape) * majority_label
