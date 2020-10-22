@@ -81,23 +81,17 @@ def train_model(model, train_dl, valid_dl, epochs=10, lr=0.001,):
         if i % 5 == 1:
             print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (sum_loss/total, val_loss, val_acc, val_rmse))
 
-def validation_metrics (model, valid_dl):
+def pred (model, valid_dl):
     model.eval()
-    correct = 0
-    total = 0
-    sum_loss = 0.0
-    sum_rmse = 0.0
+    y_pred = []
+    y_true = []
     for x, y, l in valid_dl:
         x = x.long()
         y = y.long()
         y_hat = model(x, l)
-        loss = F.cross_entropy(y_hat, y)
-        pred = torch.max(y_hat, 1)[1]
-        correct += (pred == y).float().sum()
-        total += y.shape[0]
-        sum_loss += loss.item()*y.shape[0]
-        sum_rmse += np.sqrt(mean_squared_error(pred, y.unsqueeze(-1)))*y.shape[0]
-    return sum_loss/total, correct/total, sum_rmse/total
+        y_pred.append(y_hat)
+        y_true.append(y)
+    get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
 
 def lstm():
     # set seed and any other hyper-parameters
@@ -144,16 +138,6 @@ def lstm():
 
     model = LSTM_variable_input(len(vocab2index), 50, 50)
     train_model(model, train_dl, val_dl, epochs=30, lr=0.1)
-
-    '''
-    # get predicted labels
-    y_pred_test = np.ones(y_test.shape) * majority_label
-
-    # generate metrics in folder
-    get_metrics(y_pred=y_pred_test, y_true=y_test, save_dir="./", model_name='lstm')
-    '''
-
-    
 
 if __name__ == '__main__':
     lstm()
