@@ -80,8 +80,8 @@ def main():
     df_augmented = pd.DataFrame.from_records(data_dict)
 
     # debug
-    import code
-    code.interact(local={**locals(), **globals()})
+    # import code
+    # code.interact(local={**locals(), **globals()})
 
     df_new = df.append(df_augmented)
     df_new['qid'] = df_new['qid'].fillna(0)  # all augmented quids are 0
