@@ -56,13 +56,16 @@ def train_model():
                                  # class_weight=class_weights,
                                  verbose=1)
     # k-fold CV
-    # clf.fit(X_train, y_train)
-    scores = cross_val_score(clf, X_train, y_train, cv = 5, scoring = 'f1_macro')
-    print(f"Mean score {np.mean(scores)}")
+    clf.fit(X_train, y_train)
+    # scores = cross_val_score(clf, X_train, y_train, cv = 5, scoring = 'f1_macro')
+    # print(f"Mean score {np.mean(scores)}")
     print(clf.classes_, clf.class_weight)
 
     # test
     y_pred = clf.predict(X_test)
+
+    import code
+    code.interact(local={**locals(), **globals()})
 
     # generate metrics in folder
     get_metrics(y_pred=y_pred, y_true=y_test, save_dir="./", model_name='random_forrest')
