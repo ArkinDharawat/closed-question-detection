@@ -60,7 +60,7 @@ def encode_sentence(text, vocab2index):
     encoded = enc1
     return encoded, len(encoded)
 
-def train_model(model, train_dl, valid_dl, epochs=10, lr=0.001,):
+def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     optimizer = torch.optim.Adam(parameters, lr=lr)
     for i in range(epochs):
@@ -77,15 +77,34 @@ def train_model(model, train_dl, valid_dl, epochs=10, lr=0.001,):
             optimizer.step()
             sum_loss += loss.item()*y.shape[0]
             total += y.shape[0]
-        val_loss, val_acc, val_rmse = validation_metrics(model, val_dl)
+        val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl)
         if i % 5 == 1:
             print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (sum_loss/total, val_loss, val_acc, val_rmse))
+    pred(model, test_dl)
 
-def pred (model, valid_dl):
+def validation_metrics (model, valid_dl):
+    model.eval()
+    correct = 0
+    total = 0
+    sum_loss = 0.0
+    sum_rmse = 0.0
+    for x, y, l in valid_dl:
+        x = x.long()
+        y = y.long()
+        y_hat = model(x, l)
+        loss = F.cross_entropy(y_hat, y)
+        pred = torch.max(y_hat, 1)[1]
+        correct += (pred == y).float().sum()
+        total += y.shape[0]
+        sum_loss += loss.item()*y.shape[0]
+        sum_rmse += np.sqrt(mean_squared_error(pred, y.unsqueeze(-1)))*y.shape[0]
+    return sum_loss/total, correct/total, sum_rmse/total
+
+def pred (model, test_dl):
     model.eval()
     y_pred = []
     y_true = []
-    for x, y, l in valid_dl:
+    for x, y, l in test_dl:
         x = x.long()
         y = y.long()
         y_hat = model(x, l)
@@ -133,11 +152,13 @@ def lstm():
 
     train_ds = ReviewsDataset(X_train, y_train)
     valid_ds = ReviewsDataset(X_val, y_val)
+    test_ds = ReviewsDataset(X_test, y_test)
     train_dl = DataLoader(train_ds, shuffle=True)
     val_dl = DataLoader(valid_ds)
+    test_dl = DataLoader(test_ds)
 
     model = LSTM_variable_input(len(vocab2index), 50, 50)
-    train_model(model, train_dl, val_dl, epochs=30, lr=0.1)
+    train_model(model, train_dl, val_dl, test_dl, epochs=30, lr=0.1)
 
 if __name__ == '__main__':
     lstm()
