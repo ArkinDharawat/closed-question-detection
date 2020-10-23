@@ -8,6 +8,7 @@ from sklearn.utils.class_weight import compute_class_weight
 from ml_models.tfidf_vectorize import build_tfidf_vectorizer
 from model_metrics import get_metrics
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import classification_report
 
 FOLDER_PATH = "../so_dataset"
 
@@ -52,7 +53,7 @@ def train_model():
     clf = RandomForestClassifier(n_estimators=500,
                                  random_state=random_seed,
                                  n_jobs=-1,
-                                 # class_weight=class_weights,
+                                 class_weight=class_weights,
                                  verbose=1)
     clf.fit(X_train, y_train)
     print(clf.classes_, clf.class_weight)
@@ -64,10 +65,8 @@ def train_model():
     # test
     y_pred = clf.predict(X_test)
 
-    import code
-    code.interact(local={**locals(), **globals()})
-
     # generate metrics in folder
+    print(classification_report(y_test, y_pred))
     get_metrics(y_pred=y_pred, y_true=y_test, save_dir="./", model_name='random_forrest')
 
 
