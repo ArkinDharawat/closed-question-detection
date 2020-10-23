@@ -29,7 +29,7 @@ def train_model():
     X_title = title_vectorizer.transform(q_titles).toarray()
     X_body = body_vectorizer.transform(q_bodies).toarray()
     X_tag = tag_vectorizer.transform(q_tags).toarray()
-    X = np.concatenate((X_title, X_body, X_tag), axis=0)
+    X = np.concatenate((X_title, X_body, X_tag), axis=1)
     y = y = df['label'].values
 
     # train-test split
