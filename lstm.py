@@ -12,7 +12,7 @@ import numpy as np
 import re
 import spacy
 from collections import Counter
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import TensorDataset, DataLoader, Dataset
 import torch.nn.functional as F
 import string
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
@@ -26,7 +26,7 @@ import torch.optim as optim
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import seaborn as sns
 '''
-class ReviewsDataset(Dataset):
+class ValDataset(Dataset):
     def __init__(self, X, Y):
         self.X = X
         self.y = Y
@@ -35,7 +35,7 @@ class ReviewsDataset(Dataset):
         return len(self.y)
     
     def __getitem__(self, idx):
-        return torch.from_numpy(self.X[idx][0].astype(np.int32)), self.y[idx], self.X[idx][1]
+        return self.X[idx][0], self.y[idx], self.X[idx][1]
 
 class LSTM_variable_input(torch.nn.Module) :
     def __init__(self, vocab_size, embedding_dim, hidden_dim) :
@@ -54,11 +54,12 @@ class LSTM_variable_input(torch.nn.Module) :
         out = self.linear(ht[-1])
         return out
 
-def encode_sentence(text, vocab2index):
-    encoded = np.zeros(len(vocab2index), dtype=int)
+def encode_sentence(text, vocab2index, N=250):
+    encoded = np.zeros(N, dtype=int)
     enc1 = np.array([vocab2index.get(word, vocab2index["UNK"]) for word in text])
-    encoded = enc1
-    return encoded, len(encoded)
+    length = min(N, len(enc1))
+    encoded[:length] = enc1[:length]
+    return encoded, length
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
     parameters = filter(lambda p: p.requires_grad, model.parameters())
@@ -104,9 +105,9 @@ def pred (model, test_dl):
     model.eval()
     y_pred = []
     y_true = []
-    for x, y, l in test_dl:
+    for x, l, y in test_dl:
         x = x.long()
-        y = y.long()
+        l = l.long()
         y_hat = model(x, l)
         y_pred.append(y_hat)
         y_true.append(y)
@@ -141,7 +142,7 @@ def lstm():
     # assign features
 
     X = q_bodies.apply(lambda x: np.array(encode_sentence(x,vocab2index )))
-    print(X)
+    print(X[0])
     y = df['label']
 
     # train-val-test split
@@ -150,9 +151,9 @@ def lstm():
     X_train, X_val, y_train, y_val = train_test_split(X_training, y_training, test_size=train_val_split_ratio,
                                                         random_state=random_seed)
 
-    train_ds = ReviewsDataset(X_train, y_train)
-    valid_ds = ReviewsDataset(X_val, y_val)
-    test_ds = ReviewsDataset(X_test, y_test)
+    train_ds = ValDataset(X_train, y_train)
+    valid_ds = ValDataset(X_val, y_val)
+    test_ds = ValDataset(X_test, y_test)
     train_dl = DataLoader(train_ds, shuffle=True)
     val_dl = DataLoader(valid_ds)
     test_dl = DataLoader(test_ds)
