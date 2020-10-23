@@ -32,6 +32,9 @@ def train_model():
     X = np.concatenate((X_title, X_body, X_tag), axis=1)
     y = df['label'].values
 
+    import code
+    code.interact(local={**locals(), **globals()})
+
     # train-test split
     X_test, X_train, y_test, y_train = train_test_split(X, y, test_size=train_test_split_ratio,
                                                         random_state=random_seed)
