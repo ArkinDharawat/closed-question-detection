@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-
+from sklearn.utils.class_weight import compute_class_weight
 from ml_models.tfidf_vectorize import build_tfidf_vectorizer
 from model_metrics import get_metrics
 
@@ -44,11 +44,14 @@ def train_model():
 
     # train
     # TODO: set k-fold CV
-    clf = RandomForestClassifier(n_estimators=1000,
+    # TODO: class weight strategy
+    class_weights = compute_class_weight('balanced', classes=5, y=y_train)
+    print(f"Class weights {class_weights}")
+    clf = RandomForestClassifier(n_estimators=2000,
+                                 criterion='entropy',
                                  random_state=random_seed,
                                  n_jobs=-1,
-                                 # class_weight='balanced',
-                                 class_weight='balanced_subsample',
+                                 class_weight=class_weights,
                                  verbose=1)
     clf.fit(X_train, y_train)
     print(clf.classes_, clf.class_weight)
