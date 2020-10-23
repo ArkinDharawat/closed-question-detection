@@ -50,7 +50,7 @@ def train_model():
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
     clf = RandomForestClassifier(n_estimators=5000,
-                                 criterion='entropy',
+                                 # criterion='entropy',
                                  random_state=random_seed,
                                  n_jobs=-1,
                                  # class_weight=class_weights,
