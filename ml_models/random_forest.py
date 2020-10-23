@@ -40,7 +40,7 @@ def train_model():
 
     # train
     # TODO: set class-weights
-    clf = RandomForestClassifier(max_depth=-1, random_state=random_seed, n_jobs=8, verbose=1)  # 8 proccerssor
+    clf = RandomForestClassifier(max_depth=200, random_state=random_seed, n_jobs=8, verbose=1)  # 8 proccerssor
     clf.fit(X_train, y_train)
 
     # test
