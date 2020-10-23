@@ -16,7 +16,7 @@ def build_tfidf_vectorizer():
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
 
     # title vectorizer
-    title_vectorizer = TfidfVectorizer(max_features=500, stop_words='english')
+    title_vectorizer = TfidfVectorizer(max_features=1000, stop_words='english')
     title_vectorizer.fit(q_titles)
     save_vecotrizer('title_vectorizer.pk', title_vectorizer)
 
