@@ -48,7 +48,7 @@ def train_model():
                                  random_state=random_seed,
                                  n_jobs=-1,
                                  # class_weight='balanced',
-                                 class_weight='balanced',
+                                 class_weight='balanced_subsample',
                                  verbose=1)
     clf.fit(X_train, y_train)
     print(clf.classes_, clf.class_weight)
