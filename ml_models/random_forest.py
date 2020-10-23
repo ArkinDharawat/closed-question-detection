@@ -47,20 +47,20 @@ def train_model():
     # train
     # TODO: class weight strategy
     class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
-    class_weights[0] = class_weights[0] # * 0.01  # for 0th class
+    class_weights[0] = class_weights[0]  # * 0.01  # for 0th class
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
     clf = RandomForestClassifier(n_estimators=500,
                                  random_state=random_seed,
                                  n_jobs=-1,
-                                 class_weight=class_weights,
+                                 class_weight='balanced_subsample',
                                  verbose=1)
     clf.fit(X_train, y_train)
     print(clf.classes_, clf.class_weight)
 
     # k-fold CV
-    # scores = cross_val_score(clf, X, y, cv = 5, scoring = 'f1_macro')
-    # print(f"Mean score {np.mean(scores)}")
+    scores = cross_val_score(clf, X, y, cv=5, scoring='f1_macro')
+    print(f"CV Mean F1-macro {np.mean(scores)}")
 
     # test
     y_pred = clf.predict(X_test)
