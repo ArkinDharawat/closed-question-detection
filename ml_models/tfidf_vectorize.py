@@ -17,14 +17,15 @@ def build_tfidf_vectorizer():
 
     # title vectorizer
     title_vectorizer = TfidfVectorizer(max_features=1000,
-                                       stop_words='english')
+                                       stop_words='english',
+                                       min_df=0.05)
     title_vectorizer.fit(q_titles)
     save_vecotrizer('title_vectorizer.pk', title_vectorizer)
 
     # body vectorizer
     body_vectorizer = TfidfVectorizer(max_features=2000,
                                       stop_words='english',
-                                      min_df=0.001)
+                                      min_df=0.05)
     body_vectorizer.fit(q_bodies)
     save_vecotrizer('body_vectorizer.pk', body_vectorizer)
 
