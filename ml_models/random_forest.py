@@ -50,16 +50,16 @@ def train_model():
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
     clf = RandomForestClassifier(n_estimators=500,
-                                 # criterion='entropy',
                                  random_state=random_seed,
                                  n_jobs=-1,
                                  # class_weight=class_weights,
                                  verbose=1)
-    # k-fold CV
     clf.fit(X_train, y_train)
-    # scores = cross_val_score(clf, X_train, y_train, cv = 5, scoring = 'f1_macro')
-    # print(f"Mean score {np.mean(scores)}")
     print(clf.classes_, clf.class_weight)
+
+    # k-fold CV
+    # scores = cross_val_score(clf, X, y, cv = 5, scoring = 'f1_macro')
+    # print(f"Mean score {np.mean(scores)}")
 
     # test
     y_pred = clf.predict(X_test)
