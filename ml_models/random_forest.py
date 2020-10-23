@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.utils.class_weight import compute_class_weight
 from ml_models.tfidf_vectorize import build_tfidf_vectorizer
 from model_metrics import get_metrics
+from sklearn.model_selection import cross_val_score
 
 FOLDER_PATH = "../so_dataset"
 
@@ -43,7 +44,6 @@ def train_model():
     print(f"Test dataset {X_test.shape}, {y_test.shape}")
 
     # train
-    # TODO: set k-fold CV
     # TODO: class weight strategy
     class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
     class_weights[0] = class_weights[0] * 0.01  # for 0th class
@@ -55,7 +55,10 @@ def train_model():
                                  n_jobs=-1,
                                  # class_weight=class_weights,
                                  verbose=1)
-    clf.fit(X_train, y_train)
+    # k-fold CV
+    # clf.fit(X_train, y_train)
+    scores = cross_val_score(clf, X_train, y_train, cv = 5, scoring = 'f1_macro')
+    print(f"Mean score {np.mean(scores)}")
     print(clf.classes_, clf.class_weight)
 
     # test
