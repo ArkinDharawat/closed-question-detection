@@ -32,8 +32,8 @@ def train_model():
     X = np.concatenate((X_title, X_body, X_tag), axis=1)
     y = df['label'].values
 
-    import code
-    code.interact(local={**locals(), **globals()})
+    # import code
+    # code.interact(local={**locals(), **globals()})
 
     # train-test split
     X_test, X_train, y_test, y_train = train_test_split(X, y, test_size=train_test_split_ratio,
@@ -43,11 +43,12 @@ def train_model():
     print(f"Test dataset {X_test.shape}, {y_test.shape}")
 
     # train
-    # TODO: set class-weights
-    clf = RandomForestClassifier(n_estimators=200,
+    # TODO: set k-fold CV
+    clf = RandomForestClassifier(n_estimators=1000,
                                  random_state=random_seed,
                                  n_jobs=-1,
-                                 verbose=1)  # 8 proccerssor
+                                 class_weight='balanced',
+                                 verbose=1)
     clf.fit(X_train, y_train)
 
     # test
