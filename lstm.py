@@ -152,8 +152,8 @@ def pred (model, test_dl):
 def lstm():
     # set seed and any other hyper-parameters
     random_seed = 42
-    train_test_split_ratio = 0.4
-    train_val_split_ratio = .5
+    train_test_split_ratio = 0.2
+    train_val_split_ratio = .1
 
     # read data
     FOLDER_PATH = "so_dataset"
@@ -176,6 +176,9 @@ def lstm():
         words.append(word)
     # assign features
 
+    q_bodies.append(q_titles)
+    q_bodies.append(q_tags)
+    
     X = q_bodies.apply(lambda x: np.array(encode_sentence(x,vocab2index )))
     y = df['label']
 
