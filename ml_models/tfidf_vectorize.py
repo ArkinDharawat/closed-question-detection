@@ -16,28 +16,34 @@ def build_tfidf_vectorizer():
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
 
     # title vectorizer
-    title_vectorizer = TfidfVectorizer(max_features=5000,
-                                       stop_words='english',
-                                        min_df=0.001,
-                                       sublinear_tf=True
-                                       )
+    title_vectorizer = TfidfVectorizer(
+        # max_features=5000,
+        max_df=0.6,
+        stop_words='english',
+        min_df=0.001,
+        sublinear_tf=True
+    )
     title_vectorizer.fit(q_titles)
     save_vecotrizer('title_vectorizer.pk', title_vectorizer)
 
     # body vectorizer
-    body_vectorizer = TfidfVectorizer(max_features=5000,
-                                      stop_words='english',
-                                      min_df=0.001,
-                                      sublinear_tf=True
-                                      )
+    body_vectorizer = TfidfVectorizer(
+        # max_features=5000,
+        max_df=0.6,
+        stop_words='english',
+        min_df=0.001,
+        sublinear_tf=True
+    )
     body_vectorizer.fit(q_bodies)
     save_vecotrizer('body_vectorizer.pk', body_vectorizer)
 
     # title vectorizer
-    tag_vecotrizer = TfidfVectorizer(max_features=500,
-                                     min_df=0.01,
-                                     sublinear_tf=True
-                                     )  # top 500 tags, get rid of 10% of tags
+    tag_vecotrizer = TfidfVectorizer(
+        # max_features=500,
+        max_df=0.6,
+        min_df=0.01,
+        sublinear_tf=True
+    )  # top 500 tags, get rid of 10% of tags
     tag_vecotrizer.fit(q_tags)
     save_vecotrizer('tag_vectorizer.pk', tag_vecotrizer)
 
