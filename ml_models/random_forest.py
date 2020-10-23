@@ -47,7 +47,7 @@ def train_model():
     # train
     # TODO: class weight strategy
     class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
-    class_weights[0] = class_weights[0] * 0.01  # for 0th class
+    class_weights[0] = class_weights[0] # * 0.01  # for 0th class
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
     clf = RandomForestClassifier(n_estimators=500,
