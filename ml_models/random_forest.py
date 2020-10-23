@@ -62,7 +62,7 @@ def train_model():
         }
         clf = GridSearchCV(model,
                            tuning_parameters,
-                           scoring='%s_macro' % "F1",
+                           scoring='%s_macro' % "f1",
                            n_jobs=-1)
         clf.fit(X_train, y_train)
         means = clf.cv_results_['mean_test_score']
