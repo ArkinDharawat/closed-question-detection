@@ -49,7 +49,7 @@ def train_model():
     class_weights[0] = class_weights[0] * 0.01  # for 0th class
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
-    clf = RandomForestClassifier(n_estimators=5000,
+    clf = RandomForestClassifier(n_estimators=500,
                                  # criterion='entropy',
                                  random_state=random_seed,
                                  n_jobs=-1,
