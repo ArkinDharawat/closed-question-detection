@@ -18,7 +18,7 @@ def build_tfidf_vectorizer():
     # title vectorizer
     title_vectorizer = TfidfVectorizer(
         # max_features=5000,
-        max_df=0.6,
+        max_df=0.4,
         stop_words='english',
         min_df=0.001,
         sublinear_tf=True
@@ -29,7 +29,7 @@ def build_tfidf_vectorizer():
     # body vectorizer
     body_vectorizer = TfidfVectorizer(
         # max_features=5000,
-        max_df=0.6,
+        max_df=0.4,
         stop_words='english',
         min_df=0.001,
         sublinear_tf=True
@@ -40,10 +40,10 @@ def build_tfidf_vectorizer():
     # title vectorizer
     tag_vecotrizer = TfidfVectorizer(
         # max_features=500,
-        max_df=0.6,
+        max_df=0.5,
         min_df=0.01,
         sublinear_tf=True
-    )  # top 500 tags, get rid of 10% of tags
+    )  # get rid of 10% of tags
     tag_vecotrizer.fit(q_tags)
     save_vecotrizer('tag_vectorizer.pk', tag_vecotrizer)
 
