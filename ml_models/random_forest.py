@@ -64,6 +64,7 @@ def train_model():
                            tuning_parameters,
                            scoring='%s_macro' % "F1",
                            n_jobs=-1)
+        clf.fit(X_train, y_train)
         means = clf.cv_results_['mean_test_score']
         print(f"Mean F1 macro {means}")
 
