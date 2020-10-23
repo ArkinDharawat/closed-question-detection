@@ -35,6 +35,8 @@ def train_model():
     # train-test split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=train_test_split_ratio,
                                                         random_state=random_seed)
+    print(f"Train dataset {X_train.shape}, {y_train.shape}")
+    print(f"Test dataset {X_test.shape}, {y_test.shape}")
 
     # train
     # TODO: set class-weights
