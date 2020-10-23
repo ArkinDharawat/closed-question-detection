@@ -31,7 +31,7 @@ def build_tfidf_vectorizer():
 
     # title vectorizer
     tag_vecotrizer = TfidfVectorizer(max_features=500,
-                                     min_df=0.1)  # top 500 tags, get rid of 10% of tags
+                                     min_df=0.01)  # top 500 tags, get rid of 10% of tags
     tag_vecotrizer.fit(q_tags)
     save_vecotrizer('tag_vectorizer.pk', tag_vecotrizer)
 
