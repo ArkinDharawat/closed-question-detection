@@ -80,7 +80,7 @@ def train_model():
 
     # generate metrics in folder
     print(classification_report(y_test, y_pred))
-    get_metrics(y_pred=y_pred, y_true=y_test, save_dir="./", model_name='random_forrest')
+    get_metrics(y_pred=y_pred, y_true=y_test, save_dir="./", model_name='rf_tfidf_model')
 
 
 if __name__ == '__main__':
