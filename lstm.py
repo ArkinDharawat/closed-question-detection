@@ -26,6 +26,42 @@ import torch.optim as optim
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import seaborn as sns
 '''
+
+class LSTM(nn.Module):
+
+    def __init__(self, leng, dimension=128):
+        super(LSTM, self).__init__()
+
+        self.embedding = nn.Embedding(leng, 300)
+        self.dimension = dimension
+        self.lstm = nn.LSTM(input_size=300,
+                            hidden_size=dimension,
+                            num_layers=1,
+                            batch_first=True,
+                            bidirectional=True)
+        self.drop = nn.Dropout(p=0.5)
+
+        self.fc = nn.Linear(2*dimension, 5)
+
+    def forward(self, text, text_len):
+
+        text_emb = self.embedding(text) # throw in raw text
+
+        packed_input = pack_padded_sequence(text_emb, text_len, batch_first=True, enforce_sorted=False)
+        packed_output, _ = self.lstm(packed_input)
+        output, _ = pad_packed_sequence(packed_output, batch_first=True) # better to pack the text
+
+        out_forward = output[range(len(output)), text_len - 1, :self.dimension]
+        out_reverse = output[:, 0, self.dimension:]
+        out_reduced = torch.cat((out_forward, out_reverse), 1)
+        text_fea = self.drop(out_reduced)
+
+        text_fea = self.fc(text_fea)
+        #text_fea = torch.squeeze(text_fea, 1)
+        #text_out = torch.sigmoid(text_fea)
+
+        return text_fea
+        
 class ValDataset(Dataset):
     def __init__(self, X, Y):
         self.X = X
@@ -35,7 +71,7 @@ class ValDataset(Dataset):
         return len(self.y)
     
     def __getitem__(self, idx):
-        return self.X[idx][0], self.y[idx], self.X[idx][1]
+        return torch.from_numpy(self.X.iloc[idx][0].astype(np.int32)), self.y.iloc[idx], self.X.iloc[idx][1]
 
 class LSTM_variable_input(torch.nn.Module) :
     def __init__(self, vocab_size, embedding_dim, hidden_dim) :
@@ -79,8 +115,8 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
             sum_loss += loss.item()*y.shape[0]
             total += y.shape[0]
         val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl)
-        if i % 5 == 1:
-            print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (sum_loss/total, val_loss, val_acc, val_rmse))
+        #if i % 5 == 1:
+        print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (sum_loss/total, val_loss, val_acc, val_rmse))
     pred(model, test_dl)
 
 def validation_metrics (model, valid_dl):
@@ -130,7 +166,6 @@ def lstm():
     counts = Counter()
     for rows in q_bodies:
         counts.update(rows)
-    print("num_words before:",len(counts.keys()))
 
 
     #creating vocabulary
@@ -142,7 +177,6 @@ def lstm():
     # assign features
 
     X = q_bodies.apply(lambda x: np.array(encode_sentence(x,vocab2index )))
-    print(X[0])
     y = df['label']
 
     # train-val-test split
@@ -151,14 +185,22 @@ def lstm():
     X_train, X_val, y_train, y_val = train_test_split(X_training, y_training, test_size=train_val_split_ratio,
                                                         random_state=random_seed)
 
+    X_train.reset_index(drop=True)
+    X_val.reset_index(drop=True)
+    X_test.reset_index(drop=True)
+
+    y_train.reset_index(drop=True)
+    y_val.reset_index(drop=True)
+    y_test.reset_index(drop=True)
+
     train_ds = ValDataset(X_train, y_train)
     valid_ds = ValDataset(X_val, y_val)
     test_ds = ValDataset(X_test, y_test)
-    train_dl = DataLoader(train_ds, shuffle=True)
+    train_dl = DataLoader(train_ds, batch_size = 16, shuffle=True)
     val_dl = DataLoader(valid_ds)
     test_dl = DataLoader(test_ds)
 
-    model = LSTM_variable_input(len(vocab2index), 50, 50)
+    model = LSTM(len(vocab2index))
     train_model(model, train_dl, val_dl, test_dl, epochs=30, lr=0.1)
 
 if __name__ == '__main__':
