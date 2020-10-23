@@ -45,8 +45,8 @@ def train_model():
     # train
     # TODO: set k-fold CV
     # TODO: class weight strategy
-    class_weights = compute_class_weight('balanced', classes=5, y=y_train)
-    print(f"Class weights {class_weights}")
+    class_weights = compute_class_weight('balanced', classes=np.unique(y_train), y=y_train)
+    print(f"Classes {np.unique(y_train)}, \nClass weights {class_weights}")
     clf = RandomForestClassifier(n_estimators=2000,
                                  criterion='entropy',
                                  random_state=random_seed,
