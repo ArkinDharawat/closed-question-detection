@@ -30,7 +30,7 @@ def train_model():
     X_body = body_vectorizer.transform(q_bodies).toarray()
     X_tag = tag_vectorizer.transform(q_tags).toarray()
     X = np.concatenate((X_title, X_body, X_tag), axis=1)
-    y = y = df['label'].values
+    y = df['label'].values
 
     # train-test split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=train_test_split_ratio,
