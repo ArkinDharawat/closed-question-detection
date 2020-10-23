@@ -15,7 +15,7 @@ FOLDER_PATH = "../so_dataset"
 
 
 def train_model():
-    # TODO: tune model
+    # TODO: add parser args
     random_seed = 42
     train_test_split_ratio = 0.8
     hyperparam_tune = True
@@ -55,10 +55,10 @@ def train_model():
     if hyperparam_tune:
         model = RandomForestClassifier()
         tuning_parameters = {
-             'n_estimators': [100, 500, 1000, 2500],
-             'random_state': [42, 12345, 10101], # seed as hyperparamerter?
-             'class_weight': ['balanced', 'balanced_subsample'],
-             'max_features': ['auto', 'sqrt']
+            'n_estimators': [100, 500, 1000, 2500],
+            'random_state': [42, 12345, 10101],  # seed as hyperparamerter?
+            'class_weight': ['balanced', 'balanced_subsample'],
+            'max_features': ['auto', 'sqrt']
         }
         clf = GridSearchCV(model,
                            tuning_parameters,
