@@ -135,7 +135,7 @@ def validation_metrics (model, valid_dl):
         y_hat = model(x, l)
         loss = F.cross_entropy(y_hat, y).cuda()
         pred = torch.max(y_hat, 1)[1].cuda()
-        print(pred)
+        print(pred[0][0])
         print(y)
         correct += (pred == y).float().sum()
         total += y.shape[0]
