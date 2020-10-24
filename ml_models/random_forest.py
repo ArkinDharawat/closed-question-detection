@@ -48,9 +48,6 @@ def train_model():
     X = np.concatenate((X_title, X_body, X_tag), axis=1)
     y = df['label'].values
 
-    # import code
-    # code.interact(local={**locals(), **globals()})
-
     # train-test split
     X_test, X_train, y_test, y_train = train_test_split(X, y, test_size=train_test_split_ratio,
                                                         random_state=random_seed)
@@ -59,11 +56,12 @@ def train_model():
     print(f"Test dataset {X_test.shape}, {y_test.shape}")
 
     # train
-    # TODO: class weight strategy
+    # class weights configured manually
     class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
     class_weights[0] = class_weights[0] * 0.001  # for 0th class
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
+
     if hyperparam_tune:
         model = RandomForestClassifier()
         tuning_parameters = {
