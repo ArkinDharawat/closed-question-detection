@@ -108,9 +108,9 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
         sum_loss = 0.0
         total = 0
         for x, y, l in train_dl:
-            x = x.long()
-            y = y.long()
-            y_pred = model(x, l)
+            x = x.long().cuda()
+            y = y.long().cuda()
+            y_pred = model(x, l).cuda()
             optimizer.zero_grad()
             loss = F.cross_entropy(y_pred, y)
             loss.backward()
