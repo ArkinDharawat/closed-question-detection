@@ -153,6 +153,8 @@ def pred (model, test_dl):
             pred = torch.max(y_hat, 1)[1].cuda()
             y_pred.append(pred.cpu().item())
             y_true.append(y.item())
+    print(y_pred)
+    print(y_true)
     get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
 
 def lstm():
