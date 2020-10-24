@@ -17,7 +17,7 @@ FOLDER_PATH = "../so_dataset"
 
 def train_model():
     # TODO: add parser args
-    random_seed = sys.argv[1]
+    random_seed = int(sys.argv[1])
     hyperparam_tune = bool(sys.argv[2])
     train_test_split_ratio = 0.8
 
