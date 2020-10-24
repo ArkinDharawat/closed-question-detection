@@ -18,7 +18,7 @@ FOLDER_PATH = "../so_dataset"
 def train_model():
     # TODO: add parser args
     random_seed = int(sys.argv[1])
-    hyperparam_tune = bool(sys.argv[2])
+    hyperparam_tune = bool(sys.argv[2] == "True") # weird way to check if true
     train_test_split_ratio = 0.8
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
