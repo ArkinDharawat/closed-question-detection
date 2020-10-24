@@ -137,7 +137,7 @@ def validation_metrics (model, valid_dl):
         correct += (pred == y).float().sum()
         total += y.shape[0]
         sum_loss += loss.item()*y.shape[0]
-        sum_rmse += np.sqrt(mean_squared_error(pred, y.unsqueeze(-1)))*y.shape[0]
+        sum_rmse += np.sqrt(mean_squared_error(pred, y.unsqueeze(-1).cpu()))*y.shape[0]
     return sum_loss/total, correct/total, sum_rmse/total
 
 def pred (model, test_dl):
