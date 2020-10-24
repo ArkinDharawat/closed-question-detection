@@ -135,7 +135,7 @@ def validation_metrics (model, valid_dl):
         y_hat = model(x, l)
         loss = F.cross_entropy(y_hat, y).cuda()
         pred = torch.max(y_hat, 1)[1].cuda()
-        print(pred[0][0])
+        print(pred)
         print(y)
         correct += (pred == y).float().sum()
         total += y.shape[0]
@@ -153,8 +153,8 @@ def pred (model, test_dl):
             l = l.long().cuda()
             y_hat = model(x, l).cuda()
             pred = torch.max(y_hat, 1)[1].cuda()
-            y_pred.append(pred.cpu())
-            y_true.append(y)
+            y_pred.append(pred.cpu().item())
+            y_true.append(y.item())
     print(y_pred)
     get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
 
