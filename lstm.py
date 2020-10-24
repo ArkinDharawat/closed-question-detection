@@ -205,8 +205,7 @@ def lstm():
     val_dl = DataLoader(valid_ds)
     test_dl = DataLoader(test_ds)
 
-    model = LSTM(len(vocab2index))
-    model.cuda()
+    model = LSTM(len(vocab2index)).to(device)
     train_model(model, train_dl, val_dl, test_dl, epochs=30, lr=0.1)
 
 if __name__ == '__main__':
