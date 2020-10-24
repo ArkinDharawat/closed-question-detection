@@ -86,7 +86,7 @@ def train_model():
         clf = RandomForestClassifier(n_estimators=500,
                                      random_state=random_seed,
                                      n_jobs=-1,
-                                     class_weight=class_weights,
+                                     class_weight='balanced',
                                      verbose=1)
         clf.fit(X_train, y_train)
 
