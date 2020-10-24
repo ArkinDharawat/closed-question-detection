@@ -147,11 +147,11 @@ def pred (model, test_dl):
     y_true = []
     for x, l, y in test_dl:
         if l >0:
-            x = x.long().cuda()
-            y = y.long().cuda()
+            x = x.long()
+            y = y.long()
             y_hat = model(x, l)
-            loss = F.cross_entropy(y_hat, y).cuda()
-            pred = torch.max(y_hat, 1)[1].cuda()
+            loss = F.cross_entropy(y_hat, y)
+            pred = torch.max(y_hat, 1)[1]
             y_pred.append(pred)
             y_true.append(y)
     print(y_pred)
