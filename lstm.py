@@ -146,12 +146,12 @@ def pred (model, test_dl):
     y_pred = []
     y_true = []
     for x, y, l in test_dl:
-        if l >0:
-            x = x.long().cuda()
-            y_hat = model(x, l).cuda()
-            pred = torch.max(y_hat, 1)[1].cuda()
-            y_pred.append(pred.cpu())
-            y_true.append(y)
+        x = x.long().cuda()
+        y = y.long().cuda()
+        y_hat = model(x, l)
+        pred = torch.max(y_hat, 1)[1].cuda()
+        y_pred.append(pred.cpu())
+        y_true.append(y)
     print(y_pred)
     print(y_true)
     get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
