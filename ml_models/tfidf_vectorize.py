@@ -9,6 +9,8 @@ FOLDER_PATH = "../so_dataset"
 
 
 def build_tfidf_vectorizer(df):
+    # TODO - Aaron: Try out HasingVecotrizer
+    # TODO - Aaron: Look at: https://scikit-learn.org/0.15/auto_examples/document_classification_20newsgroups.html
     q_bodies = df['body'].apply(lambda x: x.replace('|', ' ').lower())
     q_titles = df['title'].apply(lambda x: x.replace('|', ' ').lower())
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())

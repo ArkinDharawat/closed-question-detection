@@ -18,7 +18,6 @@ FOLDER_PATH = "../so_dataset"
 
 
 def train_model():
-    # TODO: add parser args
     parser = argparse.ArgumentParser(description='Train random forrest model')
     parser.add_argument('--seed', type=int, help='set hyperparam seed')
     parser.add_argument('--tune', type=eval, choices=[True, False], default='False',
@@ -40,7 +39,7 @@ def train_model():
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
 
     # load vectorizers
-    title_vectorizer, body_vectorizer, tag_vectorizer = build_tfidf_vectorizer(df)  # TODO: load from file
+    title_vectorizer, body_vectorizer, tag_vectorizer = build_tfidf_vectorizer(df)
 
     # features
     X_title = title_vectorizer.transform(q_titles).toarray()
