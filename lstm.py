@@ -201,12 +201,12 @@ def lstm():
     train_ds = ValDataset(X_train, y_train)
     valid_ds = ValDataset(X_val, y_val)
     test_ds = ValDataset(X_test, y_test)
-    train_dl = DataLoader(train_ds, batch_size = 16, shuffle=True).to(device)
-    val_dl = DataLoader(valid_ds).to(device)
-    test_dl = DataLoader(test_ds).to(device)
+    train_dl = DataLoader(train_ds, batch_size = 16, shuffle=True)
+    val_dl = DataLoader(valid_ds)
+    test_dl = DataLoader(test_ds)
 
     model = LSTM(len(vocab2index))
-    model.to(device)
+    model.cuda()
     train_model(model, train_dl, val_dl, test_dl, epochs=30, lr=0.1)
 
 if __name__ == '__main__':
