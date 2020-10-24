@@ -148,7 +148,7 @@ def pred (model, test_dl):
     for x, y, l in test_dl:
         x = x.long().cuda()
         y = y.long().cuda()
-        y_hat = model(x, l).cuda()
+        y_hat = model(x, l)
         pred = torch.max(y_hat, 1)[1].cuda()
         y_pred.append(pred.cpu())
         y_true.append(y.cpu())
