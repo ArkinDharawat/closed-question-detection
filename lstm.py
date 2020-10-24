@@ -125,7 +125,6 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
 
 def validation_metrics (model, valid_dl):
     model.eval()
-    model.cuda()
     correct = 0
     total = 0
     sum_loss = 0.0
@@ -146,13 +145,13 @@ def pred (model, test_dl):
     model.eval()
     y_pred = []
     y_true = []
-    for x, y, l in test_dl:
+    for x, y, l in valid_dl:
         x = x.long().cuda()
         y = y.long().cuda()
         y_hat = model(x, l)
         pred = torch.max(y_hat, 1)[1].cuda()
-        y_pred.append(pred.cpu())
-        y_true.append(y.cpu())
+        y_pred.append(pred
+        y_true.append(y)
     print(y_pred)
     print(y_true)
     get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
