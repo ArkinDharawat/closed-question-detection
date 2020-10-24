@@ -151,9 +151,7 @@ def pred (model, test_dl):
             y_hat = model(x, l).cuda()
             pred = torch.max(y_hat, 1)[1].cuda()
             y_pred.append(pred.cpu().item())
-            y_true.append(y)
-    print(y_pred)
-    print(y_true)
+            y_true.append(y.item())
     get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
 
 def lstm():
@@ -171,7 +169,6 @@ def lstm():
     q_titles = df['title'].apply(lambda x: x.split('|'))
     q_tags = df['tag_list'].apply(lambda x: x.split('|'))
     labels = df['label']
-    print(labels)
 
     counts = Counter()
     for rows in q_bodies:
