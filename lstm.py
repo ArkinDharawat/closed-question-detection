@@ -100,9 +100,6 @@ def encode_sentence(text, vocab2index, N=250):
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(device) 
-    train_dl.cuda()
-    valid_dl.cuda()
-    test_dl.cuda()
     model.to(device)
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     optimizer = torch.optim.Adam(parameters, lr=lr)
