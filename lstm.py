@@ -93,7 +93,7 @@ class LSTM_variable_input(torch.nn.Module) :
 def encode_sentence(text, vocab2index, N=250):
     encoded = np.zeros(N, dtype=int)
     enc1 = np.array([vocab2index.get(word, vocab2index["UNK"]) for word in text])
-    length = min(N, len(enc1))
+    length = max(N, len(enc1))
     encoded[:length] = enc1[:length]
     return encoded, length
 
