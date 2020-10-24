@@ -1,4 +1,5 @@
 import os
+import sys
 
 import numpy as np
 import pandas as pd
@@ -16,9 +17,9 @@ FOLDER_PATH = "../so_dataset"
 
 def train_model():
     # TODO: add parser args
-    random_seed = 42
+    random_seed = sys.argv[1]
+    hyperparam_tune = bool(sys.argv[2])
     train_test_split_ratio = 0.8
-    hyperparam_tune = True
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
 
