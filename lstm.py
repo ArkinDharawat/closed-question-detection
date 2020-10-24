@@ -142,11 +142,12 @@ def validation_metrics (model, valid_dl):
     return sum_loss/total, correct/total, sum_rmse/total
 
 def pred (model, test_dl):
+    model.cuda()
     model.eval()
     y_pred = []
     y_true = []
     for x, y, l in test_dl:
-        x = x.long()
+        x = x.long().cuda()
         l = l.long().cuda()
         y = y.long().cuda()
         y_hat = model(x, l)
