@@ -145,7 +145,7 @@ def pred (model, test_dl):
     model.eval()
     y_pred = []
     y_true = []
-    for x, y, l in valid_dl:
+    for x, y, l in test_dl:
         x = x.long().cuda()
         y = y.long().cuda()
         y_hat = model(x, l)
