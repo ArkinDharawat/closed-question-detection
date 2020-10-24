@@ -172,6 +172,7 @@ def lstm():
     q_titles = df['title'].apply(lambda x: x.split('|'))
     q_tags = df['tag_list'].apply(lambda x: x.split('|'))
     labels = df['label']
+    print(labels)
 
     counts = Counter()
     for rows in q_bodies:
@@ -190,7 +191,7 @@ def lstm():
     q_bodies.append(q_tags)
     
     X = q_bodies.apply(lambda x: np.array(encode_sentence(x,vocab2index )))
-    y = df['label']
+    y = labels
 
     # train-val-test split
     X_training, X_test, y_training, y_test = train_test_split(X, y, test_size=train_test_split_ratio,
