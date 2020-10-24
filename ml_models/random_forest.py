@@ -18,7 +18,7 @@ FOLDER_PATH = "../so_dataset"
 def train_model():
     # TODO: add parser args
     random_seed = int(sys.argv[1])
-    hyperparam_tune = bool(sys.argv[2] == "True") # weird way to check if true
+    hyperparam_tune = bool(sys.argv[2] == "True")  # weird way to check if true
     train_test_split_ratio = 0.8
 
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
@@ -50,7 +50,7 @@ def train_model():
     # train
     # TODO: class weight strategy
     class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
-    class_weights[0] = class_weights[0]  # * 0.01  # for 0th class
+    class_weights[0] = class_weights[0] * 0.001  # for 0th class
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
     if hyperparam_tune:
@@ -74,6 +74,7 @@ def train_model():
         clf = RandomForestClassifier(n_estimators=500,
                                      random_state=random_seed,
                                      n_jobs=-1,
+                                     class_weight=class_weights,
                                      verbose=1)
         clf.fit(X_train, y_train)
 
