@@ -85,9 +85,9 @@ class LSTM_variable_input(torch.nn.Module) :
     def forward(self, x, s):
         x = self.embeddings(x)
         x = self.dropout(x)
-        x_pack = pack_padded_sequence(x, s, batch_first=True, enforce_sorted=False)
-        out_pack, (ht, ct) = self.lstm(x_pack)
-        out = self.linear(ht[-1])
+        x_pack = pack_padded_sequence(x, s, batch_first=True, enforce_sorted=False).cuda()
+        out_pack, (ht, ct) = self.lstm(x_pack).cuda()
+        out = self.linear(ht[-1]).cuda()
         return out
 
 def encode_sentence(text, vocab2index, N=250):
@@ -100,6 +100,9 @@ def encode_sentence(text, vocab2index, N=250):
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(device) 
+    train_dl.cuda()
+    valid_dl.cuda()
+    test_dl.cuda()
     model.to(device)
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     optimizer = torch.optim.Adam(parameters, lr=lr)
