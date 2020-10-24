@@ -121,9 +121,9 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
         val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl)
         #if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (sum_loss/total, val_loss, val_acc, val_rmse))
-    pred(model, test_dl)
+    validation_metrics(model, test_dl, final = True)
 
-def validation_metrics (model, valid_dl):
+def validation_metrics (model, valid_dl, final = False):
     model.eval()
     correct = 0
     total = 0
@@ -139,7 +139,10 @@ def validation_metrics (model, valid_dl):
         total += y.shape[0]
         sum_loss += loss.item()*y.shape[0]
         sum_rmse += np.sqrt(mean_squared_error(pred.cpu(), y.unsqueeze(-1).cpu()))*y.cpu().shape[0]
-    return sum_loss/total, correct/total, sum_rmse/total
+    if final:
+        get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
+    else:
+        return sum_loss/total, correct/total, sum_rmse/total
 
 def pred (model, test_dl):
     model.cuda()
