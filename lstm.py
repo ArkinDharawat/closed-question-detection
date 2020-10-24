@@ -150,7 +150,9 @@ def pred (model, test_dl):
     get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
 
 def lstm():
-    # set seed and any other hyper-parameters
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device) 
+   # set seed and any other hyper-parameters
     random_seed = 42
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
@@ -204,6 +206,7 @@ def lstm():
     test_dl = DataLoader(test_ds)
 
     model = LSTM(len(vocab2index))
+    model.to(device)
     train_model(model, train_dl, val_dl, test_dl, epochs=30, lr=0.1)
 
 if __name__ == '__main__':
