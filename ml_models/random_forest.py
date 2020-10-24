@@ -62,15 +62,14 @@ def train_model():
     # train
     # TODO: class weight strategy
     class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
-    # class_weights[0] = class_weights[0] * 0.001  # for 0th class
+    class_weights[0] = class_weights[0] * 0.001  # for 0th class
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
     if hyperparam_tune:
         model = RandomForestClassifier()
         tuning_parameters = {
-            'n_estimators': [100, 500, 1000, 2500],
-            'random_state': [42],  # seed as hyperparamerter?
-            'class_weight': ['balanced', 'balanced_subsample'],
+            'n_estimators': [500, 1000, 2500],
+            'class_weight': ['balanced', 'balanced_subsample', class_weights],
             'max_features': ['auto', 'sqrt']
         }
         clf = GridSearchCV(model,
@@ -81,6 +80,8 @@ def train_model():
         clf.fit(X_train, y_train)
         means = clf.cv_results_['mean_test_score']
         print(f"Mean F1 macro {means}")
+        print("Best Params")
+        print(clf.best_params_)
 
     else:
         clf = RandomForestClassifier(n_estimators=500,
