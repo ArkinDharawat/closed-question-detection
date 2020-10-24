@@ -28,7 +28,7 @@ def train_model():
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
 
     # load vectorizers
-    title_vectorizer, body_vectorizer, tag_vectorizer = build_tfidf_vectorizer()  # TODO: load from file
+    title_vectorizer, body_vectorizer, tag_vectorizer = build_tfidf_vectorizer(df)  # TODO: load from file
 
     # features
     X_title = title_vectorizer.transform(q_titles).toarray()
@@ -57,7 +57,7 @@ def train_model():
         model = RandomForestClassifier()
         tuning_parameters = {
             'n_estimators': [100, 500, 1000, 2500],
-            'random_state': [42, 12345, 10101],  # seed as hyperparamerter?
+            'random_state': [42],  # seed as hyperparamerter?
             'class_weight': ['balanced', 'balanced_subsample'],
             'max_features': ['auto', 'sqrt']
         }
@@ -74,7 +74,6 @@ def train_model():
         clf = RandomForestClassifier(n_estimators=500,
                                      random_state=random_seed,
                                      n_jobs=-1,
-                                     class_weight='balanced_subsample',
                                      verbose=1)
         clf.fit(X_train, y_train)
 

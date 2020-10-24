@@ -8,9 +8,7 @@ from ml_models.utils import save_vecotrizer
 FOLDER_PATH = "../so_dataset"
 
 
-def build_tfidf_vectorizer():
-    df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
-
+def build_tfidf_vectorizer(df):
     q_bodies = df['body'].apply(lambda x: x.replace('|', ' ').lower())
     q_titles = df['title'].apply(lambda x: x.replace('|', ' ').lower())
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
@@ -51,4 +49,5 @@ def build_tfidf_vectorizer():
 
 
 if __name__ == '__main__':
-    build_tfidf_vectorizer()
+    df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
+    build_tfidf_vectorizer(df)
