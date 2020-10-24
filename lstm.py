@@ -148,10 +148,12 @@ def pred (model, test_dl):
     for x, l, y in test_dl:
         if l >0:
             x = x.long().cuda()
-            l = l.long().cuda()
-            y_hat = model(x, l).cuda()
-            y_pred.append(y_hat.cpu())
-            y_true.append(y)
+            y = y.long().cuda()
+            y_hat = model(x, l)
+            loss = F.cross_entropy(y_hat, y).cuda()
+            pred = torch.max(y_hat, 1)[1].cuda()
+            y_pred.append(pred.cpu())
+            y_true.append(y.cpu())
     print(y_pred)
     get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
 
