@@ -63,6 +63,8 @@ def train_model():
     # TODO: class weight strategy
     class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
     class_weights[0] = class_weights[0] * 0.001  # for 0th class
+    class_weights[4] = class_weights[4] * 10  # for 0th class
+    class_weights[3] = class_weights[3] * 2  # for 0th class
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
     if hyperparam_tune:
