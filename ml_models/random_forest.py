@@ -20,13 +20,15 @@ FOLDER_PATH = "../so_dataset"
 def train_model():
     # TODO: add parser args
     parser = argparse.ArgumentParser(description='Train random forrest model')
-    parser.add_argument('--seed', type=int,  help='set hyperparam seed')
-    parser.add_argument('--tune', type=bool, help='run grid search and tune hyperparams')
+    parser.add_argument('--seed', type=int, help='set hyperparam seed')
+    parser.add_argument('--tune', type=eval, choices=[True, False], default='False',
+                        help='run grid search and tune hyperparams')
     parser.add_argument('--path', type=str, help='path to dataframe')
 
     args = parser.parse_args()
     random_seed = args.seed
     hyperparam_tune = args.tune
+    print()
     df_path = os.path.join(FOLDER_PATH, args.path)
 
     train_test_split_ratio = 0.8
