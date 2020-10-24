@@ -129,11 +129,11 @@ def validation_metrics (model, valid_dl):
     sum_loss = 0.0
     sum_rmse = 0.0
     for x, y, l in valid_dl:
-        x = x.long()
-        y = y.long()
-        y_hat = model(x, l)
-        loss = F.cross_entropy(y_hat, y)
-        pred = torch.max(y_hat, 1)[1]
+        x = x.long().cuda()
+        y = y.long().cuda()
+        y_hat = model(x, l).cuda()
+        loss = F.cross_entropy(y_hat, y).cuda()
+        pred = torch.max(y_hat, 1)[1].cuda()
         correct += (pred == y).float().sum()
         total += y.shape[0]
         sum_loss += loss.item()*y.shape[0]
