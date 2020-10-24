@@ -45,7 +45,7 @@ class LSTM(nn.Module):
 
     def forward(self, text, text_len):
 
-        text_emb = self.embedding(text) # throw in raw text
+        text_emb = self.embedding(text).cuda() # throw in raw text
 
         packed_input = pack_padded_sequence(text_emb, text_len, batch_first=True, enforce_sorted=False)
         packed_output, _ = self.lstm(packed_input)
@@ -98,6 +98,9 @@ def encode_sentence(text, vocab2index, N=250):
     return encoded, length
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device) 
+    model.to(device)
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     optimizer = torch.optim.Adam(parameters, lr=lr)
     for i in range(epochs):
@@ -177,7 +180,6 @@ def lstm():
         vocab2index[word] = len(words)
         words.append(word)
     # assign features
-    vocab2index.to(device)
 
     q_bodies.append(q_titles)
     q_bodies.append(q_tags)
