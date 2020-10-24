@@ -210,7 +210,7 @@ def lstm():
     test_dl = DataLoader(test_ds)
 
     model = LSTM(len(vocab2index)).to(device)
-    train_model(model, train_dl, val_dl, test_dl, epochs=30, lr=0.1)
+    train_model(model, train_dl, val_dl, test_dl, epochs=2, lr=0.01)
 
 if __name__ == '__main__':
     lstm()
