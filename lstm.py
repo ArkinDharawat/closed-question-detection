@@ -183,6 +183,8 @@ def lstm():
 
     q_bodies.append(q_titles)
     q_bodies.append(q_tags)
+
+    q_bodies =  [q_body for q_body in q_bodies if len(q_body) >= 0]
     
     X = q_bodies.apply(lambda x: np.array(encode_sentence(x,vocab2index )))
     y = df['label']
