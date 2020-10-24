@@ -93,9 +93,10 @@ class LSTM_variable_input(torch.nn.Module) :
 def encode_sentence(text, vocab2index, N=250):
     encoded = np.zeros(N, dtype=int)
     enc1 = np.array([vocab2index.get(word, vocab2index["UNK"]) for word in text])
-    length = max(N, len(enc1))
+    length = min(N, len(enc1))
     encoded[:length] = enc1[:length]
-    return encoded, length
+    if length > 0:
+        return encoded, length
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
