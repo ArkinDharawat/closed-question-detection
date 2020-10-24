@@ -177,6 +177,7 @@ def lstm():
         vocab2index[word] = len(words)
         words.append(word)
     # assign features
+    vocab2index.to(device)
 
     q_bodies.append(q_titles)
     q_bodies.append(q_tags)
