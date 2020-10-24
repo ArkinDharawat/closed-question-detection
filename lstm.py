@@ -149,7 +149,7 @@ def pred (model, test_dl):
         if l >0:
             x = x.long()
             y = y.long()
-            y_hat = model(x, l)
+            y_hat = model(x, l).cuda()
             loss = F.cross_entropy(y_hat, y)
             pred = torch.max(y_hat, 1)[1]
             y_pred.append(pred)
