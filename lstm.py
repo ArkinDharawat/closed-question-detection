@@ -152,6 +152,7 @@ def pred (model, test_dl):
             y_hat = model(x, l).cuda()
             y_pred.append(y_hat.cpu())
             y_true.append(y)
+    print(y_pred)
     get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
 
 def lstm():
