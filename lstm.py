@@ -125,6 +125,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
 
 def validation_metrics (model, valid_dl):
     model.eval()
+    model.cuda()
     correct = 0
     total = 0
     sum_loss = 0.0
