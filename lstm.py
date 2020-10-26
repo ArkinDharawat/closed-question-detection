@@ -13,10 +13,12 @@ import re
 import spacy
 from collections import Counter
 from torch.utils.data import TensorDataset, DataLoader, Dataset
-import torch.nn.functional as F
+# import torch.nn.functional as F
 import string
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from sklearn.metrics import mean_squared_error
+from lossess.focal_loss import FocalLoss
+from sklearn.utils import class_weight
 '''
 from tqdm.notebook import tqdm
 from torchtext.data import Field, TabularDataset, BucketIterator
@@ -61,15 +63,15 @@ class LSTM(nn.Module):
         #text_out = torch.sigmoid(text_fea)
 
         return text_fea
-        
+
 class ValDataset(Dataset):
     def __init__(self, X, Y):
         self.X = X
         self.y = Y
-        
+
     def __len__(self):
         return len(self.y)
-    
+
     def __getitem__(self, idx):
         return torch.from_numpy(self.X.iloc[idx][0].astype(np.int32)), self.y.iloc[idx], self.X.iloc[idx][1]
 
@@ -81,7 +83,7 @@ class LSTM_variable_input(torch.nn.Module) :
         self.embeddings = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)
         self.lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
         self.linear = nn.Linear(hidden_dim, 5)
-        
+
     def forward(self, x, s):
         x = self.embeddings(x)
         x = self.dropout(x)
@@ -98,11 +100,14 @@ def encode_sentence(text, vocab2index, N=250):
     if length > 0:
         return encoded, length
 
-def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
+def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criterion=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(device) 
+    print(device)
     model.to(device)
     parameters = filter(lambda p: p.requires_grad, model.parameters())
+    if criterion is None:
+        print("Cannot Train Model if Loss is None")
+        return
     optimizer = torch.optim.Adam(parameters, lr=lr)
     for i in range(epochs):
         model.train()
@@ -113,7 +118,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001,):
             y = y.long().cuda()
             y_pred = model(x, l).cuda()
             optimizer.zero_grad()
-            loss = F.cross_entropy(y_pred, y)
+            loss = criterion(y_pred, y)
             loss.backward()
             optimizer.step()
             sum_loss += loss.item()*y.shape[0]
@@ -167,11 +172,12 @@ def pred (model, test_dl):
 
 def lstm():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(device) 
-   # set seed and any other hyper-parameters
+    print(device)
+    # set seed and any other hyper-parameters
     random_seed = 42
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
+    loss = 'CE' # 'FL', 'WCE'
 
     # read data
     FOLDER_PATH = "so_dataset"
@@ -196,7 +202,7 @@ def lstm():
 
     q_bodies.append(q_titles)
     q_bodies.append(q_tags)
-    
+
     X = q_bodies.apply(lambda x: np.array(encode_sentence(x,vocab2index )))
     y = labels
 
@@ -221,8 +227,19 @@ def lstm():
     val_dl = DataLoader(valid_ds)
     test_dl = DataLoader(test_ds)
 
+    if loss == 'WCE':
+        # TODO: Add other weighting formulas
+        class_weights = class_weight.compute_class_weight('balanced', np.unique(labels), labels) # make class-weight
+        label_weights = torch.Tensor(class_weights).to(device) # make torch tensor
+        criterion = nn.CrossEntropyLoss(weight=label_weights)
+    elif loss == 'FL':
+        # TODO: add value for alpha and other
+        criterion = FocalLoss()
+    else:
+        criterion = nn.CrossEntropyLoss()
+
     model = LSTM(len(vocab2index)).to(device)
-    train_model(model, train_dl, val_dl, test_dl, epochs=1, lr=0.01)
+    train_model(model, train_dl, val_dl, test_dl, epochs=1, lr=0.01, criterion=criterion)
 
 if __name__ == '__main__':
     lstm()
