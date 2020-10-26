@@ -18,6 +18,7 @@ def get_metrics(y_pred, y_true, save_dir, model_name):
         fobj.write(np.array2string(cm))
         fobj.write("\n")
         report = classification_report(y_true, y_pred)  # Consider accuracy here and not macro-F1
+        print(report)
         fobj.write(report)
 
     # save confusin matrix
@@ -30,9 +31,8 @@ def get_metrics(y_pred, y_true, save_dir, model_name):
     ax.set_xlabel('Predicted Labels')
     ax.set_ylabel('True Labels')
 
-    display_labels = ['open', 'off-topic', 'unclear', 'broad', 'opinion']
-    ax.xaxis.set_ticklabels(display_labels)
-    ax.yaxis.set_ticklabels(display_labels)
+    #display_labels = ['open', 'off-topic', 'unclear', 'broad', 'opinion']
+    #ax.xaxis.set_ticklabels(display_labels)
 
     plt.savefig(cm_plot_path)
 
