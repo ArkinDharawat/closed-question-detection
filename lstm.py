@@ -208,15 +208,13 @@ def lstm():
 
     counts = Counter()
     for rows in q_bodies:
-        counts.update([r.lower() for r in rows if r.strip() != ""])
+        counts.update([r.strip().lower() for r in rows if r.strip() != ""])
 
     # creating vocabulary
     vocab2index = {"": 0, "UNK": 1}
     words = ["", "UNK"]
     i = 2
     for word in counts:
-        if word in vocab2index:
-            continue # if word is
         vocab2index[word] = i
         words.append(word)
         i += 1
