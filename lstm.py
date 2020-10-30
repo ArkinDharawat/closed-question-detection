@@ -20,6 +20,8 @@ from sklearn.metrics import mean_squared_error
 from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
 
+import tqdm
+
 '''
 from tqdm.notebook import tqdm
 from torchtext.data import Field, TabularDataset, BucketIterator
@@ -116,7 +118,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         return
     optimizer = torch.optim.Adam(parameters, lr=lr)
     print("Training model...")
-    for i in range(epochs):
+    for i in tqdm(range(epochs)):
         model.train()
         sum_loss = 0.0
         total = 0
@@ -194,6 +196,7 @@ def lstm():
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
     loss = 'CE'  # 'FL', 'WCE'
+    epochs = 10
 
     # read data
     FOLDER_PATH = "so_dataset"
@@ -258,7 +261,7 @@ def lstm():
     model = LSTM(len(vocab2index))
     assert len(words) == len(vocab2index)
     print(f"Vocab size: {len(vocab2index)}")
-    train_model(model, train_dl, val_dl, test_dl, epochs=1, lr=0.01, criterion=criterion)
+    train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=0.01, criterion=criterion)
 
 
 if __name__ == '__main__':
