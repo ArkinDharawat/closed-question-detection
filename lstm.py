@@ -20,7 +20,7 @@ from sklearn.metrics import mean_squared_error
 from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
 
-import tqdm
+from tqdm import tqdm
 
 '''
 from tqdm.notebook import tqdm
