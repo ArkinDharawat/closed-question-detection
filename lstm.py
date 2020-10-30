@@ -258,7 +258,8 @@ def lstm():
         criterion = nn.CrossEntropyLoss()
 
     model = LSTM(len(vocab2index))
-    train_model(model, train_dl, val_dl, test_dl, epochs=1, lr=0.01, criterion=criterion)
+    # TODO: set epoch > 1
+    train_model(model, train_dl, val_dl, test_dl, epochs=0, lr=0.01, criterion=criterion)
 
 
 if __name__ == '__main__':
