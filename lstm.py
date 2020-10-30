@@ -153,7 +153,7 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     y_true = []
     for x, y, l in valid_dl:
         if test_data:
-            print(max(x), min(x))
+            print(torch.max(x), torch.min(x))
             # print(x.shape, y.shape, l)
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
         y_hat = model(x, l)
