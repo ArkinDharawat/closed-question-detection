@@ -37,14 +37,14 @@ USE_GPU = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class LSTM(nn.Module):
 
-    def __init__(self, leng, dimension=128):
+    def __init__(self, leng, emb_dim=320, dimension=128, num_layers=1):
         super(LSTM, self).__init__()
 
-        self.embedding = nn.Embedding(leng, 300, padding_idx=0)
+        self.embedding = nn.Embedding(leng, emb_dim, padding_idx=0)
         self.dimension = dimension
-        self.lstm = nn.LSTM(input_size=300,
+        self.lstm = nn.LSTM(input_size=emb_dim,
                             hidden_size=dimension,
-                            num_layers=1,
+                            num_layers=num_layers,
                             batch_first=True,
                             bidirectional=True)
         self.drop = nn.Dropout(p=0.5)
