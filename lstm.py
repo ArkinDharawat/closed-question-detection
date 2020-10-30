@@ -208,7 +208,7 @@ def lstm():
 
     counts = Counter()
     for rows in q_bodies:
-        counts.update(rows)
+        counts.update([r.strip().lower() for r in rows if r != ""])
 
     # creating vocabulary
     vocab2index = {"": 0, "UNK": 1}
