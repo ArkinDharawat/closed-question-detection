@@ -148,6 +148,9 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     y_true = []
     for x, y, l in valid_dl:
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
+        # TODO: debug
+        import code
+        code.interact(local={**locals(), **globals()})
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
         pred = torch.max(y_hat, 1)[1]  # .cuda()
