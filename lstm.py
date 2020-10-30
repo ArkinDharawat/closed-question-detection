@@ -120,9 +120,9 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         sum_loss = 0.0
         total = 0
         for x, y, l in train_dl:
-            x = x.long().cuda()
-            y = y.long().cuda()
-            y_pred = model(x, l).cuda()
+            x = x.long()
+            y = y.long()
+            y_pred = model(x, l)
             optimizer.zero_grad()
             loss = criterion(y_pred, y)
             loss.backward()
@@ -210,10 +210,9 @@ def lstm():
     for word in counts:
         vocab2index[word] = len(words)
         words.append(word)
-    # assign features
-
-    q_bodies.append(q_titles)
-    q_bodies.append(q_tags)
+    # TODO: assign features
+    # q_bodies.append(q_titles)
+    # q_bodies.append(q_tags)
 
     X = q_bodies.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
     y = labels
@@ -250,7 +249,7 @@ def lstm():
     else:
         criterion = nn.CrossEntropyLoss()
 
-    model = LSTM(len(vocab2index)).to(device)
+    model = LSTM(len(vocab2index))
     train_model(model, train_dl, val_dl, test_dl, epochs=1, lr=0.01, criterion=criterion)
 
 
