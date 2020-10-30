@@ -235,8 +235,8 @@ def lstm():
     valid_ds = ValDataset(X_val, y_val)
     test_ds = ValDataset(X_test, y_test)
     train_dl = DataLoader(train_ds, batch_size=16, shuffle=True)
-    val_dl = DataLoader(valid_ds)
-    test_dl = DataLoader(test_ds)
+    val_dl = DataLoader(valid_ds, batch_size=16, shuffle=True)
+    test_dl = DataLoader(test_ds, batch_size=16, shuffle=False)
 
     if loss == 'WCE':
         # TODO: Add other weighting formulas
