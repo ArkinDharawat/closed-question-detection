@@ -259,6 +259,7 @@ def lstm():
         criterion = nn.CrossEntropyLoss()
 
     model = LSTM(len(vocab2index))
+    print(f"Vocab size {len(vocab2index)}")
     # TODO: set epoch > 1
     train_model(model, train_dl, val_dl, test_dl, epochs=0, lr=0.01, criterion=criterion)
 
