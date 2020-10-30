@@ -126,9 +126,9 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl)
         #if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (sum_loss/total, val_loss, val_acc, val_rmse))
-    validation_metrics(model, test_dl, final = True)
+    validation_metrics(model, test_dl, final = True, criterion=criterion)
 
-def validation_metrics (model, valid_dl, final = False):
+def validation_metrics (model, valid_dl, final = False, criterion=None):
     model.eval()
     correct = 0
     total = 0
@@ -140,7 +140,7 @@ def validation_metrics (model, valid_dl, final = False):
         x = x.long().cuda()
         y = y.long().cuda()
         y_hat = model(x, l)
-        loss = F.cross_entropy(y_hat, y).cuda()
+        loss = criterion(y_hat, y)
         pred = torch.max(y_hat, 1)[1].cuda()
         y_pred.append(pred)
         y_true.append(y)
