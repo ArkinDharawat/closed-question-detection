@@ -152,6 +152,8 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     y_pred = []
     y_true = []
     for x, y, l in valid_dl:
+        if test_data:
+            print(x.shape, y.shape, l)
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
