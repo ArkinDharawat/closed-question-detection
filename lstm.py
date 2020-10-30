@@ -152,9 +152,8 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     y_pred = []
     y_true = []
     for x, y, l in valid_dl:
-        if test_data:
-            print(torch.max(x), torch.min(x))
-            # print(x.shape, y.shape, l)
+        # if test_data:
+        #     print(torch.max(x), torch.min(x))
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
@@ -165,6 +164,8 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
         total += y.shape[0]
         sum_loss += loss.item() * y.shape[0]
         sum_rmse += np.sqrt(mean_squared_error(pred.cpu(), y.unsqueeze(-1).cpu())) * y.cpu().shape[0]
+    y_pred = y_pred.cpu().detach().numpy() # move to cpu
+    y_true = y_true.cpu().detach().numpy() # move to cpu
     if test_data:
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
     else:
@@ -259,9 +260,8 @@ def lstm():
         criterion = nn.CrossEntropyLoss()
 
     model = LSTM(len(vocab2index))
-    print(f"Vocab size {len(vocab2index), len(words)}")
-    import code
-    code.interact(local={**locals(), **globals()})
+    assert len(words) == len(vocab2index)
+    print(f"Vocab size: {len(vocab2index)}")
     # TODO: set epoch > 1
     train_model(model, train_dl, val_dl, test_dl, epochs=0, lr=0.01, criterion=criterion)
 
