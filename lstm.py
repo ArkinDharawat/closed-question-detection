@@ -118,7 +118,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         return
     optimizer = torch.optim.Adam(parameters, lr=lr)
     print("Training model...")
-    for i in tqdm(range(epochs)):
+    for i in range(epochs):
         model.train()
         sum_loss = 0.0
         total = 0
@@ -195,7 +195,7 @@ def lstm():
     random_seed = 42
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
-    loss = 'CE'  # 'FL', 'WCE'
+    loss = 'FL'  # 'CE', 'FL', 'WCE'
     epochs = 10
 
     # read data
@@ -258,7 +258,7 @@ def lstm():
     else:
         criterion = nn.CrossEntropyLoss()
 
-    model = LSTM(len(vocab2index))
+    model = LSTM(leng=len(vocab2index), emb_dim=300, dimension=256)
     assert len(words) == len(vocab2index)
     print(f"Vocab size: {len(vocab2index)}")
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=0.01, criterion=criterion)
