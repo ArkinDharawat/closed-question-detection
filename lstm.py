@@ -30,6 +30,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import seaborn as sns
 '''
 
+USE_GPU = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class LSTM(nn.Module):
 
@@ -106,9 +107,8 @@ def encode_sentence(text, vocab2index, N=250):
 
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criterion=None):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(device)
-    model.to(device)
+    print(USE_GPU)
+    model.to(USE_GPU)
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     if criterion is None:
         print("Cannot Train Model if Loss is None")
@@ -120,8 +120,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         sum_loss = 0.0
         total = 0
         for x, y, l in train_dl:
-            x = x.long()
-            y = y.long()
+            x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
             optimizer.zero_grad()
             y_pred = model(x, l)
             loss = criterion(y_pred, y)
@@ -132,7 +131,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl, criterion=criterion)
         # if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (
-        sum_loss / total, val_loss, val_acc, val_rmse))
+            sum_loss / total, val_loss, val_acc, val_rmse))
     validation_metrics(model, test_dl, test_data=True, criterion=criterion)
 
 
@@ -148,11 +147,10 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     y_pred = []
     y_true = []
     for x, y, l in valid_dl:
-        x = x.long() # .cuda()
-        y = y.long() # .cuda()
+        x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
-        pred = torch.max(y_hat, 1)[1] # .cuda()
+        pred = torch.max(y_hat, 1)[1]  # .cuda()
         y_pred.append(pred)
         y_true.append(y)
         correct += (pred == y).float().sum()
