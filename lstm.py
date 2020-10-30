@@ -260,6 +260,8 @@ def lstm():
 
     model = LSTM(len(vocab2index))
     print(f"Vocab size {len(vocab2index), len(words)}")
+    import code
+    code.interact(local={**locals(), **globals()})
     # TODO: set epoch > 1
     train_model(model, train_dl, val_dl, test_dl, epochs=0, lr=0.01, criterion=criterion)
 
