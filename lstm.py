@@ -197,6 +197,7 @@ def lstm():
     train_val_split_ratio = .1
     loss = 'FL'  # 'CE', 'FL', 'WCE'
     epochs = 10
+    batch_size = 32
 
     # read data
     FOLDER_PATH = "so_dataset"
@@ -243,9 +244,9 @@ def lstm():
     train_ds = ValDataset(X_train, y_train)
     valid_ds = ValDataset(X_val, y_val)
     test_ds = ValDataset(X_test, y_test)
-    train_dl = DataLoader(train_ds, batch_size=16, shuffle=True)
-    val_dl = DataLoader(valid_ds, batch_size=16, shuffle=True)
-    test_dl = DataLoader(test_ds, batch_size=16, shuffle=False)
+    train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
+    val_dl = DataLoader(valid_ds, batch_size=batch_size, shuffle=True)
+    test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
 
     if loss == 'WCE':
         # TODO: Add other weighting formulas
