@@ -38,7 +38,7 @@ class LSTM(nn.Module):
     def __init__(self, leng, dimension=128):
         super(LSTM, self).__init__()
 
-        self.embedding = nn.Embedding(leng, 300)
+        self.embedding = nn.Embedding(leng, 300, padding_idx=0)
         self.dimension = dimension
         self.lstm = nn.LSTM(input_size=300,
                             hidden_size=dimension,
@@ -153,7 +153,8 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     y_true = []
     for x, y, l in valid_dl:
         if test_data:
-            print(x.shape, y.shape, l)
+            print(max(x), min(x))
+            # print(x.shape, y.shape, l)
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
