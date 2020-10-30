@@ -148,11 +148,11 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     y_pred = []
     y_true = []
     for x, y, l in valid_dl:
-        x = x.long().cuda()
-        y = y.long().cuda()
+        x = x.long() # .cuda()
+        y = y.long() # .cuda()
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
-        pred = torch.max(y_hat, 1)[1].cuda()
+        pred = torch.max(y_hat, 1)[1] # .cuda()
         y_pred.append(pred)
         y_true.append(y)
         correct += (pred == y).float().sum()
@@ -165,22 +165,22 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
         return sum_loss / total, correct / total, sum_rmse / total
 
 
-def pred(model, test_dl):
-    model.cuda()
-    model.eval()
-    y_pred = []
-    y_true = []
-    for x, y, l in test_dl:
-        x = x.long().cuda()
-        l = l.long().cuda()
-        y = y.long().cuda()
-        y_hat = model(x, l)
-        pred = torch.max(y_hat, 1)[1].cuda()
-        y_pred.append(pred)
-        y_true.append(y)
-    print(y_pred)
-    print(y_true)
-    get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
+# def pred(model, test_dl):
+#     model.cuda()
+#     model.eval()
+#     y_pred = []
+#     y_true = []
+#     for x, y, l in test_dl:
+#         x = x.long() # .cuda()
+#         l = l.long() # .cuda()
+#         y = y.long() # .cuda()
+#         y_hat = model(x, l)
+#         pred = torch.max(y_hat, 1)[1].cuda()
+#         y_pred.append(pred)
+#         y_true.append(y)
+#     print(y_pred)
+#     print(y_true)
+#     get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
 
 
 def lstm():
