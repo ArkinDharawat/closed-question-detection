@@ -52,10 +52,6 @@ class LSTM(nn.Module):
     def forward(self, text, text_len):
         text_emb = self.embedding(text)  # .cuda()  # throw in raw text
 
-        # TODO: debug
-        # import code
-        # code.interact(local={**locals(), **globals()})
-
         packed_input = pack_padded_sequence(text_emb, text_len, batch_first=True, enforce_sorted=False)
         packed_output, _ = self.lstm(packed_input)
         output, _ = pad_packed_sequence(packed_output, batch_first=True)  # better to pack the text
@@ -164,8 +160,9 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
         total += y.shape[0]
         sum_loss += loss.item() * y.shape[0]
         sum_rmse += np.sqrt(mean_squared_error(pred.cpu(), y.unsqueeze(-1).cpu())) * y.cpu().shape[0]
-    y_pred = y_pred.cpu().detach().numpy() # move to cpu
-    y_true = y_true.cpu().detach().numpy() # move to cpu
+    # TODO: debug
+    import code
+    code.interact(local={**locals(), **globals()})
     if test_data:
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
     else:
