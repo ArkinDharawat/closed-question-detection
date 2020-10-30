@@ -22,7 +22,7 @@ def tokenize(text):
             continue
         else:
             tokens.append(token.text)
-    return TOKEN_SEP.join(tokens)
+    return TOKEN_SEP.join(tokens).lower()
 
 
 def main():
