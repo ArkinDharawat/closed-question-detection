@@ -196,7 +196,7 @@ def lstm():
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
     loss = 'FL'  # 'CE', 'FL', 'WCE'
-    epochs = 10
+    epochs = 50
     batch_size = 32
 
     # read data
@@ -258,7 +258,7 @@ def lstm():
     else:
         criterion = nn.CrossEntropyLoss()
 
-    model = LSTM(leng=len(vocab2index), emb_dim=300, dimension=256)
+    model = LSTM(leng=len(vocab2index), emb_dim=320, dimension=256, num_layers=2)
     assert len(words) == len(vocab2index)
     print(f"Vocab size: {len(vocab2index)}")
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=0.01, criterion=criterion)
