@@ -208,7 +208,7 @@ def lstm():
     labels = df['label']
 
     counts = Counter()
-    for rows in q_bodies:
+    for rows in q_titles:
         counts.update([r.strip().lower() for r in rows if r.strip() != ""])
 
     # creating vocabulary
@@ -224,7 +224,7 @@ def lstm():
     # q_bodies.append(q_titles)
     # q_bodies.append(q_tags)
 
-    X = q_bodies.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
+    X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
     y = labels
 
     # train-val-test split
