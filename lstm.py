@@ -108,7 +108,7 @@ def encode_sentence(text, vocab2index, N=250):
     length = min(N, len(enc1))
     encoded[:length] = enc1[:length]
     if length > 0:
-        return encoded, N  # length
+        return encoded, length
 
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criterion=None):
