@@ -49,7 +49,11 @@ class LSTM(nn.Module):
         self.fc = nn.Linear(2 * dimension, 5)
 
     def forward(self, text, text_len):
-        text_emb = self.embedding(text).cuda()  # throw in raw text
+        text_emb = self.embedding(text)# .cuda()  # throw in raw text
+
+        # TODO: debug
+        import code
+        code.interact(local={**locals(), **globals()})
 
         packed_input = pack_padded_sequence(text_emb, text_len, batch_first=True, enforce_sorted=False)
         packed_output, _ = self.lstm(packed_input)
@@ -148,9 +152,6 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     y_true = []
     for x, y, l in valid_dl:
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
-        # TODO: debug
-        import code
-        code.interact(local={**locals(), **globals()})
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
         pred = torch.max(y_hat, 1)[1]  # .cuda()
