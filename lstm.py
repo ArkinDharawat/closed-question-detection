@@ -212,9 +212,12 @@ def lstm():
     # creating vocabulary
     vocab2index = {"": 0, "UNK": 1}
     words = ["", "UNK"]
+    i = 2
     for word in counts:
-        vocab2index[word] = len(words)
+        vocab2index[word] = i
         words.append(word)
+        i += 1
+
     # TODO: assign features
     # q_bodies.append(q_titles)
     # q_bodies.append(q_tags)
