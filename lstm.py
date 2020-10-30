@@ -122,8 +122,8 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         for x, y, l in train_dl:
             x = x.long()
             y = y.long()
-            y_pred = model(x, l)
             optimizer.zero_grad()
+            y_pred = model(x, l)
             loss = criterion(y_pred, y)
             loss.backward()
             optimizer.step()
