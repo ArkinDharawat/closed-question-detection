@@ -147,23 +147,21 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     sum_rmse = 0.0
     y_pred = []
     y_true = []
-    convert_to_np = lambda x: x.cpu().detach().numpy()
+    convert_to_np = lambda x: x.cpu().detach().numpy() # convert to numpy on cpu
     for x, y, l in valid_dl:
         # if test_data:
         #     print(torch.max(x), torch.min(x))
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
-        pred = torch.max(y_hat, 1)[1]  # .cuda()
+        pred = torch.max(y_hat, 1)[1]
         y_pred.extend(convert_to_np(pred))
         y_true.extend(convert_to_np(y))
         correct += (pred == y).float().sum()
         total += y.shape[0]
         sum_loss += loss.item() * y.shape[0]
         sum_rmse += np.sqrt(mean_squared_error(pred.cpu(), y.unsqueeze(-1).cpu())) * y.cpu().shape[0]
-    # TODO: debug
-    import code
-    code.interact(local={**locals(), **globals()})
+
     if test_data:
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
     else:
@@ -260,8 +258,7 @@ def lstm():
     model = LSTM(len(vocab2index))
     assert len(words) == len(vocab2index)
     print(f"Vocab size: {len(vocab2index)}")
-    # TODO: set epoch > 1
-    train_model(model, train_dl, val_dl, test_dl, epochs=0, lr=0.01, criterion=criterion)
+    train_model(model, train_dl, val_dl, test_dl, epochs=1, lr=0.01, criterion=criterion)
 
 
 if __name__ == '__main__':
