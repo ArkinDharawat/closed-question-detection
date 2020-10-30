@@ -253,8 +253,7 @@ def lstm():
         label_weights = torch.Tensor(class_weights).to(device)  # make torch tensor
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
-        # TODO: add value for alpha and other
-        criterion = FocalLoss()
+        criterion = FocalLoss(alpha=0.6, gamma=0.75, smooth=1e-5)
     else:
         criterion = nn.CrossEntropyLoss()
 

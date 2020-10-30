@@ -38,7 +38,7 @@ class FocalLoss(nn.Module):
     :param size_average: (bool, optional) By default, the losses are averaged over each loss element in the batch.
     """
 
-    def __init__(self, alpha=None, gamma=2, balance_index=0, smooth=1e-5):
+    def __init__(self, alpha=2, gamma=2, balance_index=0, smooth=1e-5):
         super(FocalLoss, self).__init__()
         self.alpha = alpha
         self.gamma = gamma
