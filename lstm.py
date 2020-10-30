@@ -147,6 +147,7 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     sum_rmse = 0.0
     y_pred = []
     y_true = []
+    convert_to_np = lambda x: x.cpu().detach().numpy()
     for x, y, l in valid_dl:
         # if test_data:
         #     print(torch.max(x), torch.min(x))
@@ -154,8 +155,8 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
         pred = torch.max(y_hat, 1)[1]  # .cuda()
-        y_pred.append(pred)
-        y_true.append(y)
+        y_pred.extend(convert_to_np(pred))
+        y_true.extend(convert_to_np(y))
         correct += (pred == y).float().sum()
         total += y.shape[0]
         sum_loss += loss.item() * y.shape[0]
