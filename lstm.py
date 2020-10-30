@@ -201,7 +201,7 @@ def lstm():
 
     # read data
     FOLDER_PATH = "so_dataset"
-    df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_downsampled.csv'))
+    df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_dataset_downsampled.csv'))
     q_bodies = df['body'].apply(lambda x: x.split('|'))
     q_titles = df['title'].apply(lambda x: x.split('|'))
     q_tags = df['tag_list'].apply(lambda x: x.split('|'))
