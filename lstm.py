@@ -32,6 +32,7 @@ import seaborn as sns
 
 USE_GPU = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+
 class LSTM(nn.Module):
 
     def __init__(self, leng, dimension=128):
@@ -49,11 +50,11 @@ class LSTM(nn.Module):
         self.fc = nn.Linear(2 * dimension, 5)
 
     def forward(self, text, text_len):
-        text_emb = self.embedding(text)# .cuda()  # throw in raw text
+        text_emb = self.embedding(text)  # .cuda()  # throw in raw text
 
         # TODO: debug
-        import code
-        code.interact(local={**locals(), **globals()})
+        # import code
+        # code.interact(local={**locals(), **globals()})
 
         packed_input = pack_padded_sequence(text_emb, text_len, batch_first=True, enforce_sorted=False)
         packed_output, _ = self.lstm(packed_input)
@@ -107,7 +108,7 @@ def encode_sentence(text, vocab2index, N=250):
     length = min(N, len(enc1))
     encoded[:length] = enc1[:length]
     if length > 0:
-        return encoded, length
+        return encoded, N  # length
 
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criterion=None):
