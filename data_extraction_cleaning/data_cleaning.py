@@ -5,6 +5,8 @@ import os
 from spacy.lang.en import English
 import spacy
 
+import pandas as pd
+
 
 from data_extraction_cleaning.utils import body_strip_tags, just_text, filter_sentence, get_tag_list, remove_filpaths, TOKEN_SEP
 
