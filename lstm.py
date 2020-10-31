@@ -170,6 +170,19 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
         return sum_loss / total, correct / total, sum_rmse / total
 
 
+def calculate_class_weights(labels, version='sklearn'):
+    if version == 'sklearn':
+        class_weights = class_weight.compute_class_weight('balanced', np.unique(labels), labels)
+    elif version == 'probs':
+        class_count = np.unique(labels, return_counts=True)[1]
+        class_weights = 1. / class_count
+    else:
+        # https://forums.fast.ai/t/correcting-class-imbalance-for-nlp/22152/6
+        counts = Counter(labels)
+        trn_weights = [count / len(labels) for idx, count in counts.items()]
+        class_weights = np.array([max(trn_weights) / value for value in trn_weights])
+    return class_weights  # make weights out of inverse counts
+
 # def pred(model, test_dl):
 #     model.cuda()
 #     model.eval()
@@ -249,8 +262,7 @@ def lstm():
     test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
 
     if loss == 'WCE':
-        # TODO: Add other weighting formulas
-        class_weights = class_weight.compute_class_weight('balanced', np.unique(labels), labels)  # make class-weight
+        class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
         label_weights = torch.Tensor(class_weights).to(device)  # make torch tensor
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
