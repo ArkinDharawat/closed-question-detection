@@ -11,7 +11,7 @@ from sklearn.utils.class_weight import compute_class_weight
 
 from ml_models.tfidf_vectorize import build_tfidf_vectorizer
 from model_metrics import get_metrics
-from ml_models.utils import FOLDER_PATH
+from ml_models.utils import FOLDER_PATH, calculate_class_weights
 import argparse
 
 
@@ -55,16 +55,13 @@ def train_model():
 
     # train
     # class weights configured manually
-    class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
-    # class_weights[0] = class_weights[0] * 0.001  # for 0th class
-    class_weights = dict(zip(np.unique(y_train), class_weights))
-    print(f"Class weights {class_weights}")
+    class_weights = calculate_class_weights('sklearn')
 
     if hyperparam_tune:
         model = RandomForestClassifier()
         tuning_parameters = {
             'n_estimators': [500, 1000, 2500],
-            'class_weight': ['balanced', 'balanced_subsample', class_weights],
+            'class_weight': ['balanced', 'balanced_subsample'],
             'max_depth': [5, 10, 100],
         }
         clf = GridSearchCV(model,
@@ -83,7 +80,7 @@ def train_model():
                                      max_depth=10,
                                      random_state=random_seed,
                                      n_jobs=-1,
-                                     class_weight='balanced',
+                                     class_weight=class_weights,
                                      verbose=1)
         clf.fit(X_train, y_train)
 
