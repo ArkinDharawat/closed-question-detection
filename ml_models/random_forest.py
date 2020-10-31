@@ -56,7 +56,7 @@ def train_model():
     # train
     # class weights configured manually
     class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
-    class_weights[0] = class_weights[0] * 0.001  # for 0th class
+    # class_weights[0] = class_weights[0] * 0.001  # for 0th class
     class_weights = dict(zip(np.unique(y_train), class_weights))
     print(f"Class weights {class_weights}")
 
@@ -83,7 +83,7 @@ def train_model():
                                      max_depth=10,
                                      random_state=random_seed,
                                      n_jobs=-1,
-                                     class_weight=class_weights,
+                                     class_weight='balanced',
                                      verbose=1)
         clf.fit(X_train, y_train)
 
