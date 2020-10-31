@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from ml_models.utils import save_vecotrizer
 
-FOLDER_PATH = "../so_dataset"
+FOLDER_PATH = "so_dataset"
 
 
 def build_tfidf_vectorizer(df):

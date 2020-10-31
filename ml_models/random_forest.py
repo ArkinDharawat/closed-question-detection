@@ -14,7 +14,7 @@ from model_metrics import get_metrics
 
 import argparse
 
-FOLDER_PATH = "../so_dataset"
+FOLDER_PATH = "so_dataset"
 
 
 def train_model():
