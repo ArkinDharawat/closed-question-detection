@@ -55,7 +55,7 @@ def train_model():
 
     # train
     # class weights configured manually
-    class_weights = calculate_class_weights(labels=y, version='probs')
+    class_weights = calculate_class_weights(labels=y, version=None)
     class_weights = dict(zip(range(5), class_weights))
 
     if hyperparam_tune:
