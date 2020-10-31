@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from ml_models.utils import save_vecotrizer
+from utils import save_vecotrizer
 
 FOLDER_PATH = "../so_dataset"
 

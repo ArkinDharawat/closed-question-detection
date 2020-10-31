@@ -9,7 +9,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.utils.class_weight import compute_class_weight
 
-from ml_models.tfidf_vectorize import build_tfidf_vectorizer
+from tfidf_vectorize import build_tfidf_vectorizer
 from model_metrics import get_metrics
 
 import argparse
