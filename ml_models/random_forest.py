@@ -11,10 +11,8 @@ from sklearn.utils.class_weight import compute_class_weight
 
 from ml_models.tfidf_vectorize import build_tfidf_vectorizer
 from model_metrics import get_metrics
-
+from ml_models.utils import FOLDER_PATH
 import argparse
-
-FOLDER_PATH = "so_dataset"
 
 
 def train_model():
@@ -85,7 +83,7 @@ def train_model():
                                      max_depth=10,
                                      random_state=random_seed,
                                      n_jobs=-1,
-                                     class_weight='balanced_subsample',
+                                     class_weight='balanced',
                                      verbose=1)
         clf.fit(X_train, y_train)
 

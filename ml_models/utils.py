@@ -1,5 +1,5 @@
 import pickle
-
+FOLDER_PATH = "so_dataset"
 
 def save_vecotrizer(path, vectorizer):
     with open(path, 'wb') as fin:
