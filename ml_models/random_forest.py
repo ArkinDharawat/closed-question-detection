@@ -67,7 +67,7 @@ def train_model():
         tuning_parameters = {
             'n_estimators': [500, 1000, 2500],
             'class_weight': ['balanced', 'balanced_subsample', class_weights],
-            'max_features': ['auto', 'sqrt']
+            'max_depth': [5, 10, 100],
         }
         clf = GridSearchCV(model,
                            tuning_parameters,
@@ -81,7 +81,8 @@ def train_model():
         print(clf.best_params_)
 
     else:
-        clf = RandomForestClassifier(n_estimators=500,
+        clf = RandomForestClassifier(n_estimators=2500,
+                                     max_depth=10,
                                      random_state=random_seed,
                                      n_jobs=-1,
                                      class_weight='balanced',
