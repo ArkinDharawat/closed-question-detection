@@ -57,6 +57,7 @@ def train_model():
     # class weights configured manually
     class_weights = calculate_class_weights(labels=y, version=None)
     class_weights = dict(zip(range(5), class_weights))
+    print(f"Class weights: {class_weights}")
 
     if hyperparam_tune:
         model = RandomForestClassifier()

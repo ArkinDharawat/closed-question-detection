@@ -22,8 +22,7 @@ def calculate_class_weights(labels, version='sklearn'):
         class_weights = class_weight.compute_class_weight('balanced', np.unique(labels), labels)
     elif version == 'probs':
         class_count = np.unique(labels, return_counts=True)[1]
-        weight = 1. / class_count
-        return weight
+        class_weights = 1. / class_count
     else:
         # https://forums.fast.ai/t/correcting-class-imbalance-for-nlp/22152/6
         counts = Counter(labels)
