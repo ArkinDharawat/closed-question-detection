@@ -55,7 +55,7 @@ def train_model():
 
     # train
     # class weights configured manually
-    class_weights = calculate_class_weights(labels=y, version='sklearn')
+    class_weights = calculate_class_weights(labels=y, version='probs')
     class_weights = dict(zip(range(5), class_weights))
 
     if hyperparam_tune:
@@ -77,11 +77,12 @@ def train_model():
         print(clf.best_params_)
 
     else:
+        # Best weight strategy = 'balanced'
         clf = RandomForestClassifier(n_estimators=2500,
                                      max_depth=10,
                                      random_state=random_seed,
                                      n_jobs=-1,
-                                     class_weight='balanced',
+                                     class_weight=class_weights,
                                      verbose=1)
         clf.fit(X_train, y_train)
 
