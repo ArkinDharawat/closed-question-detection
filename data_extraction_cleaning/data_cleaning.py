@@ -2,26 +2,30 @@
 # coding: utf-8
 
 import os
-
-import pandas as pd
 from spacy.lang.en import English
+import spacy
+
 
 from data_extraction_cleaning.utils import body_strip_tags, just_text, filter_sentence, get_tag_list, remove_filpaths, TOKEN_SEP
 
 FOLDER_PATH = "../so_dataset"
-nlp = English()
+# nlp = English()
+nlp = spacy.load("en_core_web_sm")
 tokenizer = nlp.Defaults.create_tokenizer(nlp)
 
 
-def tokenize(text):
+def tokenize(text, remove_stop_words=False, use_lemma=False):
     tokens = []
     doc = tokenizer(text)
     for token in doc:
-        if ('d' in token.shape_):
-            # token contains digit
-            continue
-        else:
-            tokens.append(token.text)
+        if 'd' not in token.shape_ and token.is_alpha:
+            if remove_stop_words and token.is_stop:
+                continue # ignore stop words
+            # print(token.is_stop)
+            if use_lemma:
+                tokens.append(token.lemma_)
+            else:
+                tokens.append(token.text)
     return TOKEN_SEP.join(tokens).lower()
 
 
