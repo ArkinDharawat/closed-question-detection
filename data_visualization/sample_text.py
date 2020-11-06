@@ -20,8 +20,9 @@ if __name__ == '__main__':
         print("Some Sample titles:")
         for title in titles.sample(n=sample_size, random_state=42):
             print(title)
-        print("------------")
+
         tags = tags.apply(lambda x: x.replace('<', '')[:-1].split('>'))
         all_tags = [t for tag_list in tags for t in tag_list]
         c = Counter(all_tags)
         print(f"Top 5 tags: {c.most_common(5)}")
+        print("------------")
