@@ -210,6 +210,8 @@ def run():
     else:
         tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
         X = create_input_array(q_titles, tokenizer, max_seq_len=250)
+        import code
+        code.interact(local={**locals(), **globals()})
 
     y = labels
 
