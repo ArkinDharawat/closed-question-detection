@@ -143,6 +143,7 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
+        # TODO: check pred calculation
         pred = torch.max(y_hat, 1)[1]
         y_pred.extend(convert_to_np(pred))
         y_true.extend(convert_to_np(y))
@@ -235,6 +236,9 @@ def run():
         test_ds = BERTDataset(transform_array(X_val), y_test)
         batch_size = min(batch_size, 4)  # smaller size for BERT
 
+        import code
+        code.interact(local={**locals(), **globals()})
+
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
         X_val.reset_index(drop=True)
@@ -248,8 +252,8 @@ def run():
         valid_ds = ValDataset(X_val, y_val)
         test_ds = ValDataset(X_test, y_test)
 
-    train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
-    val_dl = DataLoader(valid_ds, batch_size=batch_size, shuffle=True)
+    train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True, drop_last=True)
+    val_dl = DataLoader(valid_ds, batch_size=batch_size, shuffle=False, drop_last=True)
     test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
 
     if loss == 'WCE':
