@@ -15,7 +15,10 @@ class BERTClassifier(nn.Module):
         self.dropout_layer = nn.Dropout(p=dropout)
         self.dense_1 = nn.Linear(self.hidden_dim, 5)
 
-    def forward(self, inputs):
+    def forward(self, inputs, length):
+        """
+        length argument not used in BERT
+        """
         input_ids, token_type_ids, attn_mask = inputs.permute(1, 0, 2)
         _, pooled_output = self.bert(input_ids, token_type_ids, attn_mask)
         # dense 0 + relu
