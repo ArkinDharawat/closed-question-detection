@@ -122,6 +122,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         # if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (
             sum_loss / total, val_loss, val_acc, val_rmse))
+    print("Testing model...")
     validation_metrics(model, test_dl, test_data=True, criterion=criterion)
 
 
@@ -180,7 +181,7 @@ def run():
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
     loss = 'WCE'  # 'CE', 'FL', 'WCE'
-    epochs = 0
+    epochs = 3
     batch_size = 32
     learning_rate = 2e-5 # 0.01
     model_type = 'BERT'  # 'BERT'
@@ -236,9 +237,6 @@ def run():
         test_ds = BERTDataset(transform_array(X_test), y_test)
         batch_size = min(batch_size, 4)  # smaller size for BERT
 
-        import code
-        code.interact(local={**locals(), **globals()})
-
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
         X_val.reset_index(drop=True)
@@ -259,6 +257,7 @@ def run():
     if loss == 'WCE':
         class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
         label_weights = torch.Tensor(class_weights).to(device)  # make torch tensor
+        print(f"Weights are {label_weights}")
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
         criterion = FocalLoss(alpha=0.6, gamma=2, smooth=1e-5)
