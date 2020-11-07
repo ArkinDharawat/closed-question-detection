@@ -179,8 +179,9 @@ def run():
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
     loss = 'FL'  # 'CE', 'FL', 'WCE'
-    epochs = 50
+    epochs = 1
     batch_size = 32
+    learning_rate = 2e-5 # 0.01
     model_type = 'BERT'  # 'BERT'
 
     # read data
@@ -268,10 +269,9 @@ def run():
     if model_type == 'LSTM':
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
-        model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        # model = BERTClassifier()
-    return
-    train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=0.01, criterion=criterion)
+        # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
+        model = BERTClassifier()
+    train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
 
 
 if __name__ == '__main__':

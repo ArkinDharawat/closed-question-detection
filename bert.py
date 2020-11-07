@@ -3,7 +3,7 @@ from transformers import BertModel, BertConfig
 
 
 class BERTClassifier(nn.Module):
-    def __init__(self, in_size, out_size, hidden_dim=256, dropout=0.6):
+    def __init__(self, hidden_dim=256, dropout=0.6):
         super(BERTClassifier, self).__init__()
         self.hidden_dim = hidden_dim
         configuration = BertConfig()
@@ -13,8 +13,7 @@ class BERTClassifier(nn.Module):
         self.dense_0 = nn.Linear(self.bert_layer_size, self.hidden_dim)
         self.relu = nn.ReLU()
         self.dropout_layer = nn.Dropout(p=dropout)
-        self.dense_1 = nn.Linear(self.hidden_dim, out_size)
-        self.softmax = nn.Softmax(dim=1)
+        self.dense_1 = nn.Linear(self.hidden_dim, 5)
 
     def forward(self, inputs):
         input_ids, token_type_ids, attn_mask = inputs.permute(1, 0, 2)
