@@ -228,7 +228,7 @@ def run():
         X_train = create_input_array(X_train, tokenizer, max_seq_len=250)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=250)
         X_val = create_input_array(X_val, tokenizer, max_seq_len=250)
-        train_ds = BERTDataset(transform_array(X_train), y_train)
+        train_ds = BERTDataset(X_train, y_train)
         valid_ds = BERTDataset(transform_array(X_test), y_val)
         test_ds = BERTDataset(transform_array(X_val), y_test)
         import code
