@@ -3,7 +3,7 @@ from transformers import BertModel, BertConfig
 
 
 class BERTClassifier(nn.Module):
-    def __init__(self, hidden_dim=256, dropout=0.6):
+    def __init__(self, hidden_dim=128, dropout=0.6):
         super(BERTClassifier, self).__init__()
         self.hidden_dim = hidden_dim
         configuration = BertConfig()
