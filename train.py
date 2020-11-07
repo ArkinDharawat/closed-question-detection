@@ -228,12 +228,11 @@ def run():
         X_train = create_input_array(X_train, tokenizer, max_seq_len=250)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=250)
         X_val = create_input_array(X_val, tokenizer, max_seq_len=250)
+
         train_ds = BERTDataset(X_train, y_train)
         valid_ds = BERTDataset(transform_array(X_test), y_val)
         test_ds = BERTDataset(transform_array(X_val), y_test)
-        import code
-        code.interact(local={**locals(), **globals()})
-        # TODO: Add dataloader here
+        batch_size = min(batch_size, 4)  # smaller size for BERT
 
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
@@ -247,9 +246,13 @@ def run():
         train_ds = ValDataset(X_train, y_train)
         valid_ds = ValDataset(X_val, y_val)
         test_ds = ValDataset(X_test, y_test)
-        train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
-        val_dl = DataLoader(valid_ds, batch_size=batch_size, shuffle=True)
-        test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
+
+    import code
+    code.interact(local={**locals(), **globals()})
+
+    train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
+    val_dl = DataLoader(valid_ds, batch_size=batch_size, shuffle=True)
+    test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
 
     if loss == 'WCE':
         class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
