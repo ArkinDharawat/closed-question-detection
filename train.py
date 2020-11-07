@@ -144,9 +144,6 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
-        # TODO: check pred calculation
-        import code
-        code.interact(local={**locals(), **globals()})
         pred = torch.max(y_hat, 1)[1]
         y_pred.extend(convert_to_np(pred))
         y_true.extend(convert_to_np(y))
@@ -154,6 +151,9 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
         total += y.shape[0]
         sum_loss += loss.item() * y.shape[0]
         sum_rmse += np.sqrt(mean_squared_error(pred.cpu(), y.unsqueeze(-1).cpu())) * y.cpu().shape[0]
+
+    import code
+    code.interact(local={**locals(), **globals()})
 
     if test_data:
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
