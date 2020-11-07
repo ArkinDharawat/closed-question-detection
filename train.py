@@ -178,7 +178,7 @@ def run():
     random_seed = 42
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
-    loss = 'FL'  # 'CE', 'FL', 'WCE'
+    loss = 'WCE'  # 'CE', 'FL', 'WCE'
     epochs = 1
     batch_size = 32
     learning_rate = 2e-5 # 0.01
