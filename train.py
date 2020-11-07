@@ -205,13 +205,9 @@ def run():
         # TODO: assign features
         # q_bodies.append(q_titles)
         # q_bodies.append(q_tags)
-
         X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
-    else:
-        tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        X = create_input_array(q_titles, tokenizer, max_seq_len=250)
-        import code
-        code.interact(local={**locals(), **globals()})
+    elif model_type == "BERT":
+        X = q_titles
 
     y = labels
 
@@ -220,6 +216,14 @@ def run():
                                                               random_state=random_seed)
     X_train, X_val, y_train, y_val = train_test_split(X_training, y_training, test_size=train_val_split_ratio,
                                                       random_state=random_seed)
+
+    if model_type == "BERT":
+        tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
+        X_train = create_input_array(X_train, tokenizer, max_seq_len=250)
+        X_test = create_input_array(X_test, tokenizer, max_seq_len=250)
+        X_val = create_input_array(X_val, tokenizer, max_seq_len=250)
+        import code
+        code.interact(local={**locals(), **globals()})
 
     X_train.reset_index(drop=True)
     X_val.reset_index(drop=True)
