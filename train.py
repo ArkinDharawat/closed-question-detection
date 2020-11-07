@@ -125,7 +125,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
     validation_metrics(model, test_dl, test_data=True, criterion=criterion)
 
 
-def validation_metrics(model, valid_dl, test_data=False, criterion=None):
+def validation_metrics(model, dl_iter, test_data=False, criterion=None):
     if criterion is None:
         print("Cannot Eval Model if Loss is None")
         return
@@ -137,7 +137,7 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     y_pred = []
     y_true = []
     convert_to_np = lambda x: x.cpu().detach().numpy()  # convert to numpy on cpu
-    for x, y, l in valid_dl:
+    for x, y, l in dl_iter:
         # if test_data:
         #     print(torch.max(x), torch.min(x))
         x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
