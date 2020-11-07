@@ -145,6 +145,8 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
         y_hat = model(x, l)
         loss = criterion(y_hat, y)
         # TODO: check pred calculation
+        import code
+        code.interact(local={**locals(), **globals()})
         pred = torch.max(y_hat, 1)[1]
         y_pred.extend(convert_to_np(pred))
         y_true.extend(convert_to_np(y))
