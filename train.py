@@ -248,9 +248,6 @@ def run():
         valid_ds = ValDataset(X_val, y_val)
         test_ds = ValDataset(X_test, y_test)
 
-    import code
-    code.interact(local={**locals(), **globals()})
-
     train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
     val_dl = DataLoader(valid_ds, batch_size=batch_size, shuffle=True)
     test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
@@ -264,9 +261,8 @@ def run():
     else:
         criterion = nn.CrossEntropyLoss()
 
-    embedding, embedding_dim = create_emb_layer(make_weight_matrix(words))
-
     if model_type == 'LSTM':
+        embedding, embedding_dim = create_emb_layer(make_weight_matrix(words))
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
