@@ -183,7 +183,7 @@ def run():
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
     loss = 'WCE'  # 'CE', 'FL', 'WCE'
-    epochs = 3
+    epochs = 0
     batch_size = 32
     learning_rate = 2e-5 # 0.01
     model_type = 'BERT'  # 'BERT'
