@@ -69,7 +69,7 @@ class BERTDataset(Dataset):
         return len(self.y)
 
     def __getitem__(self, idx):
-        return torch.from_numpy(self.X.iloc[idx][0].astype(np.int32)), self.y.iloc[idx], 0  # length not needed for BERT
+        return self.X[idx], self.y.iloc[idx], 0  # length not needed for BERT
 
 
 class ValDataset(Dataset):
