@@ -20,7 +20,10 @@ class BERTClassifier(nn.Module):
         length argument not used in BERT
         """
         input_ids, token_type_ids, attn_mask = inputs.permute(1, 0, 2)
-        _, pooled_output = self.bert(input_ids, token_type_ids, attn_mask)
+        val = self.bert(input_ids, token_type_ids, attn_mask)
+        import code
+        code.interact(local={**locals(), **globals()})
+        # _, pooled_output = self.bert(input_ids, token_type_ids, attn_mask)
         # dense 0 + relu
         output = self.relu(self.dense_0(pooled_output))
         # dropout
