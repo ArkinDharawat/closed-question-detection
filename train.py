@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from collections import Counter
 import torchtext
+from transformers import *
 
 from model_metrics import get_metrics
 import torch
@@ -21,11 +22,42 @@ from sklearn.metrics import mean_squared_error
 from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
 from lstm import LSTM
+from bert import BERTClassifier
 from lstm import ValDataset
 
 from tqdm import tqdm
 
 USE_GPU = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+def create_input_array(sentences, tokenizer, max_seq_len=None):
+    input_ids = []
+    attention_masks = []
+    token_type_ids = []
+    for sent in tqdm(sentences):
+        # `encode_plus` will:
+        #   (1) Tokenize the sentence.
+        #   (2) Prepend the `[CLS]` token to the start.
+        #   (3) Append the `[SEP]` token to the end.
+        #   (4) Map tokens to their IDs.
+        #   (5) Pad or truncate the sentence to `max_length`
+        #   (6) Create attention masks for [PAD] tokens.
+        encoded_dict = tokenizer.encode_plus(
+            sent,  # Sentence to encode.
+            add_special_tokens=True,  # Add '[CLS]' and '[SEP]'
+            max_length=max_seq_len,  # Pad & truncate all sentences.
+            pad_to_max_length=True,
+            truncation=True,
+            return_attention_mask=True)  # Construct attn. masks.
+        # return_tensors='tf',  # Return tf tensors.
+        # Add the encoded sentence to the list.
+        input_ids.append(encoded_dict['input_ids'])
+        # And its attention mask (simply differentiates padding from non-padding).
+        attention_masks.append(encoded_dict['attention_mask'])
+        token_type_ids.append(encoded_dict['token_type_ids'])
+    input_ids = np.array(input_ids)
+    attention_masks = np.array(attention_masks)
+    token_type_ids = np.array(token_type_ids)
+    return [input_ids, attention_masks, token_type_ids]
 
 def encode_sentence(text, vocab2index, N=250):
     encoded = np.zeros(N, dtype=int)
@@ -33,27 +65,30 @@ def encode_sentence(text, vocab2index, N=250):
     length = min(N, len(enc1))
     encoded[:length] = enc1[:length]
     if length > 0:
-        return encoded, length    
-    
+        return encoded, length
+
+
 def create_emb_layer(weights_matrix):
     num_embeddings, embedding_dim = weights_matrix.shape
     return nn.Embedding.from_pretrained(torch.FloatTensor(weights_matrix)), embedding_dim
 
+
 def make_weight_matrix(target_vocab):
-    glove = torchtext.vocab.GloVe(name="6B", # trained on Wikipedia 2014 corpus
-                              dim=100)   # embedding size = 100
+    glove = torchtext.vocab.GloVe(name="6B",  # trained on Wikipedia 2014 corpus
+                                  dim=100)  # embedding size = 100
     matrix_len = len(target_vocab)
     weights_matrix = np.zeros((matrix_len, 100))
     words_found = 0
 
     for i, word in enumerate(target_vocab):
-        try: 
+        try:
             weights_matrix[i] = glove[word]
             words_found += 1
         except KeyError:
-            weights_matrix[i] = np.random.normal(scale=0.6, size=(100, ))
+            weights_matrix[i] = np.random.normal(scale=0.6, size=(100,))
     print(type(weights_matrix))
     return weights_matrix
+
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criterion=None):
     print(USE_GPU)
@@ -95,7 +130,7 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
     sum_rmse = 0.0
     y_pred = []
     y_true = []
-    convert_to_np = lambda x: x.cpu().detach().numpy() # convert to numpy on cpu
+    convert_to_np = lambda x: x.cpu().detach().numpy()  # convert to numpy on cpu
     for x, y, l in valid_dl:
         # if test_data:
         #     print(torch.max(x), torch.min(x))
@@ -129,6 +164,7 @@ def calculate_class_weights(labels, version='sklearn'):
         class_weights = np.array([max(trn_weights) / value for value in trn_weights])
     return class_weights  # make weights out of inverse counts
 
+
 def run():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(device)
@@ -139,6 +175,7 @@ def run():
     loss = 'FL'  # 'CE', 'FL', 'WCE'
     epochs = 50
     batch_size = 32
+    model_type = 'BERT'  # 'BERT'
 
     # read data
     FOLDER_PATH = "so_dataset"
@@ -148,24 +185,32 @@ def run():
     q_tags = df['tag_list'].apply(lambda x: x.split('|'))
     labels = df['label']
 
-    counts = Counter()
-    for rows in q_titles:
-        counts.update([r.strip().lower() for r in rows if r.strip() != ""])
+    if model_type != 'BERT':
+        counts = Counter()
+        for rows in q_titles:
+            counts.update([r.strip().lower() for r in rows if r.strip() != ""])
 
-    # creating vocabulary
-    vocab2index = {"": 0, "UNK": 1}
-    words = ["", "UNK"]
-    i = 2
-    for word in counts:
-        vocab2index[word] = i
-        words.append(word)
-        i += 1
+        # creating vocabulary
+        vocab2index = {"": 0, "UNK": 1}
+        words = ["", "UNK"]
+        i = 2
+        for word in counts:
+            vocab2index[word] = i
+            words.append(word)
+            i += 1
 
-    # TODO: assign features
-    # q_bodies.append(q_titles)
-    # q_bodies.append(q_tags)
+        assert len(words) == len(vocab2index)
+        print(f"Vocab size: {len(vocab2index)}")
 
-    X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
+        # TODO: assign features
+        # q_bodies.append(q_titles)
+        # q_bodies.append(q_tags)
+
+        X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
+    else:
+        tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
+        X = create_input_array(q_titles, tokenizer, max_seq_len=250)
+
     y = labels
 
     # train-val-test split
@@ -200,10 +245,14 @@ def run():
 
     embedding, embedding_dim = create_emb_layer(make_weight_matrix(words))
 
-    model = LSTM(embedding = embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
-    assert len(words) == len(vocab2index)
-    print(f"Vocab size: {len(vocab2index)}")
+    if model_type == 'LSTM':
+        model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
+    elif model_type == 'BERT':
+        model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
+        # model = BERTClassifier()
+    return
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=0.01, criterion=criterion)
+
 
 if __name__ == '__main__':
     run()
