@@ -23,11 +23,16 @@ from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
 from lstm import LSTM
 from bert import BERTClassifier
-from lstm import ValDataset
+from lstm import ValDataset, BERTDataset
 
 from tqdm import tqdm
 
 USE_GPU = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+def transform_array(x):
+    return np.transpose(np.stack(x, axis=0), (1, 0, 2))
+
 
 def create_input_array(sentences, tokenizer, max_seq_len=None):
     input_ids = []
@@ -58,6 +63,7 @@ def create_input_array(sentences, tokenizer, max_seq_len=None):
     attention_masks = np.array(attention_masks)
     token_type_ids = np.array(token_type_ids)
     return [input_ids, attention_masks, token_type_ids]
+
 
 def encode_sentence(text, vocab2index, N=250):
     encoded = np.zeros(N, dtype=int)
@@ -222,23 +228,28 @@ def run():
         X_train = create_input_array(X_train, tokenizer, max_seq_len=250)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=250)
         X_val = create_input_array(X_val, tokenizer, max_seq_len=250)
+        train_ds = BERTDataset(transform_array(X_train), y_train)
+        valid_ds = BERTDataset(transform_array(X_test), y_val)
+        test_ds = BERTDataset(transform_array(X_val), y_test)
         import code
         code.interact(local={**locals(), **globals()})
+        # TODO: Add dataloader here
 
-    X_train.reset_index(drop=True)
-    X_val.reset_index(drop=True)
-    X_test.reset_index(drop=True)
+    elif model_type == "LSTM":
+        X_train.reset_index(drop=True)
+        X_val.reset_index(drop=True)
+        X_test.reset_index(drop=True)
 
-    y_train.reset_index(drop=True)
-    y_val.reset_index(drop=True)
-    y_test.reset_index(drop=True)
+        y_train.reset_index(drop=True)
+        y_val.reset_index(drop=True)
+        y_test.reset_index(drop=True)
 
-    train_ds = ValDataset(X_train, y_train)
-    valid_ds = ValDataset(X_val, y_val)
-    test_ds = ValDataset(X_test, y_test)
-    train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
-    val_dl = DataLoader(valid_ds, batch_size=batch_size, shuffle=True)
-    test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
+        train_ds = ValDataset(X_train, y_train)
+        valid_ds = ValDataset(X_val, y_val)
+        test_ds = ValDataset(X_test, y_test)
+        train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
+        val_dl = DataLoader(valid_ds, batch_size=batch_size, shuffle=True)
+        test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
 
     if loss == 'WCE':
         class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight

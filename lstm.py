@@ -72,6 +72,18 @@ class ValDataset(Dataset):
         return torch.from_numpy(self.X.iloc[idx][0].astype(np.int32)), self.y.iloc[idx], self.X.iloc[idx][1]
 
 
+def BERTDataset(Dataset):
+    def __init__(self, X, Y):
+        self.X = X
+        self.y = Y
+
+    def __len__(self):
+        return len(self.y)
+
+    def __getitem__(self, idx):
+        return torch.from_numpy(self.X.iloc[idx][0].astype(np.int32)), self.y.iloc[idx], 0  # length not needed for BERT
+
+
 class LSTM_variable_input(torch.nn.Module):
     def __init__(self, vocab_size, embedding_dim, hidden_dim):
         super().__init__()
