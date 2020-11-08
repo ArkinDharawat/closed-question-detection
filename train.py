@@ -193,7 +193,7 @@ def run():
     loss = args.loss
     epochs = args.epochs
     batch_size = args.batch_size
-    learning_rate = args.learning_rate
+    learning_rate = args.lr
     model_type = args.model_type
 
     # set seed
