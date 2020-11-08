@@ -157,7 +157,7 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
     code.interact(local={**locals(), **globals()})
 
     if test_data:
-        get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
+        get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='bert')
     else:
         return sum_loss / total, correct / total, sum_rmse / total
 
@@ -254,7 +254,7 @@ def run():
         train_ds = BERTDataset(transform_array(X_train), y_train)
         valid_ds = BERTDataset(transform_array(X_val), y_val)
         test_ds = BERTDataset(transform_array(X_test), y_test)
-        batch_size = min(batch_size, 4)  # smaller size for BERT
+        batch_size = min(batch_size, 8)  # smaller size for BERT
 
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
