@@ -104,7 +104,8 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
     if criterion is None:
         print("Cannot Train Model if Loss is None")
         return
-    optimizer = torch.optim.Adam(parameters, lr=lr)
+    # optimizer = torch.optim.Adam(parameters, lr=lr)
+    optimizer = torch.optim.AdamW(parameters, lr=lr)
     print("Training model...")
     for i in range(epochs):
         model.train()
@@ -120,8 +121,8 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
             sum_loss += loss.item()  # * y.shape[0]
             total += 1  # y.shape[0]
             print(f"loss so far: {sum_loss / total}")
-        import code
-        code.interact(local={**locals(), **globals()})
+        # import code
+        # code.interact(local={**locals(), **globals()})
 
         val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl, criterion=criterion)
         # if i % 5 == 1:
@@ -250,9 +251,7 @@ def run():
 
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        # select train mini-batch
-        X_train = X_train.iloc[0:64]  # minibatch of 64
-        y_train = y_train.iloc[0:64]
+        # select train mini-batch, loss decreases
         X_train = create_input_array(X_train, tokenizer, max_seq_len=128)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=128)
         X_val = create_input_array(X_val, tokenizer, max_seq_len=128)
@@ -296,7 +295,7 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        model = BERTClassifier(hidden_dim=128, dropout=0.5)
+        model = BERTClassifier(hidden_dim=128, dropout=0.4)
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
 
 
