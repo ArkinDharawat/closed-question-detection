@@ -286,7 +286,7 @@ def run():
         print(f"Weights are {label_weights}")
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
-        criterion = FocalLoss(alpha=0.6, gamma=2, smooth=1e-5)
+        criterion = FocalLoss(alpha=1, gamma=1, smooth=1e-5)
     else:
         criterion = nn.CrossEntropyLoss()
 
