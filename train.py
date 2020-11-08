@@ -180,7 +180,7 @@ def run():
     # set seed and any other hyper-parameters
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
-    parser.add_argument('--seed', type=int, default=42,  help='random seed')
+    parser.add_argument('--seed', type=int, default=42, help='random seed')
     parser.add_argument('--loss', type=str, default="CE", help='Should be WCE, CE or FL')
     parser.add_argument('--epochs', type=int, default=25, help='epochs to train')
     parser.add_argument('--batch_size', type=int, default=32, help='batches to train')
@@ -198,7 +198,6 @@ def run():
     # set seed
     torch.manual_seed(random_seed)
     np.random.seed(random_seed)
-
 
     # set device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -247,9 +246,9 @@ def run():
 
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        X_train = create_input_array(X_train, tokenizer, max_seq_len=250)
-        X_test = create_input_array(X_test, tokenizer, max_seq_len=250)
-        X_val = create_input_array(X_val, tokenizer, max_seq_len=250)
+        X_train = create_input_array(X_train, tokenizer, max_seq_len=512)
+        X_test = create_input_array(X_test, tokenizer, max_seq_len=512)
+        X_val = create_input_array(X_val, tokenizer, max_seq_len=512)  # bert only supports 512
 
         train_ds = BERTDataset(transform_array(X_train), y_train)
         valid_ds = BERTDataset(transform_array(X_val), y_val)
