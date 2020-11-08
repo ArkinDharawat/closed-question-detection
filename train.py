@@ -111,6 +111,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         model.train()
         sum_loss = 0.0
         total = 0
+        correct = 0
         for x, y, l in train_dl:
             x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
             optimizer.zero_grad()  # zero params
@@ -120,14 +121,16 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
             optimizer.step()
             sum_loss += loss.item()  # * y.shape[0]
             total += 1  # y.shape[0]
+            pred = torch.max(y_pred, 1)[1]
+            correct += (pred == y).float().sum()
             print(f"loss so far: {sum_loss / total}")
-        # import code
-        # code.interact(local={**locals(), **globals()})
+        import code
+        code.interact(local={**locals(), **globals()})
 
-        val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl, criterion=criterion)
+        val_loss, val_acc = validation_metrics(model, valid_dl, criterion=criterion)
         # if i % 5 == 1:
-        print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (
-            sum_loss / total, val_loss, val_acc, val_rmse))
+        print("train loss %.3f, val loss %.3f, val accuracy %.3f, and train accuracy %.3f" % (
+            sum_loss / total, val_loss, correct))
     print("Testing model...")
     validation_metrics(model, test_dl, test_data=True, criterion=criterion)
 
@@ -156,14 +159,13 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
         correct += (pred == y).float().sum()
         total += y.shape[0]
         sum_loss += loss.item() * y.shape[0]
-        sum_rmse += np.sqrt(mean_squared_error(pred.cpu(), y.unsqueeze(-1).cpu())) * y.cpu().shape[0]
 
     if test_data:
         import code
         code.interact(local={**locals(), **globals()})
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='bert')
     else:
-        return sum_loss / total, correct / total, sum_rmse / total
+        return sum_loss / total, correct / total,
 
 
 def calculate_class_weights(labels, version='sklearn'):
