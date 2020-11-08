@@ -250,6 +250,8 @@ def run():
 
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
+        # select train mini-batch
+        X_train = X_train.iloc[0:64]  # minibatch of 64
         X_train = create_input_array(X_train, tokenizer, max_seq_len=128)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=128)
         X_val = create_input_array(X_val, tokenizer, max_seq_len=128)
@@ -257,7 +259,7 @@ def run():
         train_ds = BERTDataset(transform_array(X_train), y_train)
         valid_ds = BERTDataset(transform_array(X_val), y_val)
         test_ds = BERTDataset(transform_array(X_test), y_test)
-        batch_size = min(batch_size, 16)  # smaller size for BERT
+        batch_size = min(batch_size, 32)  # smaller size for BERT
         # import code
         # code.interact(local={**locals(), **globals()})
 
