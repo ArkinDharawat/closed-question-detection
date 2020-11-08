@@ -119,6 +119,10 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
             optimizer.step()
             sum_loss += loss.item()  # * y.shape[0]
             total += 1  # y.shape[0]
+            print(f"loss so far{sum_loss / total}")
+            import code
+            code.interact(local={**locals(), **globals()})
+
         val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl, criterion=criterion)
         # if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (
@@ -253,9 +257,9 @@ def run():
         train_ds = BERTDataset(transform_array(X_train), y_train)
         valid_ds = BERTDataset(transform_array(X_val), y_val)
         test_ds = BERTDataset(transform_array(X_test), y_test)
-        batch_size = min(batch_size, 8)  # smaller size for BERT
-        import code
-        code.interact(local={**locals(), **globals()})
+        batch_size = min(batch_size, 16)  # smaller size for BERT
+        # import code
+        # code.interact(local={**locals(), **globals()})
 
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
@@ -289,7 +293,7 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        model = BERTClassifier(dropout=0.5)
+        model = BERTClassifier(hidden_dim=128, dropout=0.5)
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
 
 
