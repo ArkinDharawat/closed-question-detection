@@ -153,9 +153,6 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
         sum_loss += loss.item() * y.shape[0]
         sum_rmse += np.sqrt(mean_squared_error(pred.cpu(), y.unsqueeze(-1).cpu())) * y.cpu().shape[0]
 
-    import code
-    code.interact(local={**locals(), **globals()})
-
     if test_data:
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='bert')
     else:
@@ -236,7 +233,7 @@ def run():
         # q_bodies.append(q_tags)
         X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
     elif model_type == "BERT":
-        X = q_titles
+        X = q_titles + q_bodies
 
     y = labels
 
