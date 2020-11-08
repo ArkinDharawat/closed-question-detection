@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from collections import Counter
 import torchtext
 from transformers import *
+import argparse
 
 from model_metrics import get_metrics
 import torch
@@ -176,17 +177,33 @@ def calculate_class_weights(labels, version='sklearn'):
 
 
 def run():
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(device)
+    parser = argparse.ArgumentParser(description='train model')
     # set seed and any other hyper-parameters
-    random_seed = 42
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
-    loss = 'WCE'  # 'CE', 'FL', 'WCE'
-    epochs = 0
-    batch_size = 32
-    learning_rate = 2e-5 # 0.01
-    model_type = 'BERT'  # 'BERT'
+    parser.add_argument('--seed', type=int, default=42,  help='random seed')
+    parser.add_argument('--loss', type=str, default="CE", help='Should be WCE, CE or FL')
+    parser.add_argument('--epochs', type=int, default=25, help='epochs to train')
+    parser.add_argument('--batch_size', type=int, default=32, help='batches to train')
+    parser.add_argument('--lr', type=float, default=0.01, help='learning rate of model')
+    parser.add_argument('--model', type=str, default="LSTM", help='Should be BERT or LSTM')
+    args = parser.parse_args()
+
+    random_seed = args.seed
+    loss = args.loss
+    epochs = args.epochs
+    batch_size = args.batch_size
+    learning_rate = args.learning_rate
+    model_type = args.model_type
+
+    # set seed
+    torch.manual_seed(random_seed)
+    np.random.seed(random_seed)
+
+
+    # set device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device)
 
     # read data
     FOLDER_PATH = "so_dataset"
