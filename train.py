@@ -119,18 +119,18 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
             loss = criterion(y_pred, y)
             loss.backward()
             optimizer.step()
-            sum_loss += loss.item()  # * y.shape[0]
-            total += 1  # y.shape[0]
+            sum_loss += loss.item() * y.shape[0]
+            total += y.shape[0]
             pred = torch.max(y_pred, 1)[1]
             correct += (pred == y).float().sum()
             print(f"loss so far: {sum_loss / total}")
-        import code
-        code.interact(local={**locals(), **globals()})
+        # import code
+        # code.interact(local={**locals(), **globals()})
 
         val_loss, val_acc = validation_metrics(model, valid_dl, criterion=criterion)
         # if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and train accuracy %.3f" % (
-            sum_loss / total, val_loss, correct))
+            sum_loss / total, val_loss, correct / total))
     print("Testing model...")
     validation_metrics(model, test_dl, test_data=True, criterion=criterion)
 
