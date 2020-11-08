@@ -252,6 +252,7 @@ def run():
         tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
         # select train mini-batch
         X_train = X_train.iloc[0:64]  # minibatch of 64
+        y_train = y_train.iloc[0:64]
         X_train = create_input_array(X_train, tokenizer, max_seq_len=128)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=128)
         X_val = create_input_array(X_val, tokenizer, max_seq_len=128)
