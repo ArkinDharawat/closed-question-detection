@@ -246,16 +246,16 @@ def run():
 
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        X_train = create_input_array(X_train, tokenizer, max_seq_len=512)
-        X_test = create_input_array(X_test, tokenizer, max_seq_len=512)
-        X_val = create_input_array(X_val, tokenizer, max_seq_len=512)  # bert only supports 512
+        X_train = create_input_array(X_train, tokenizer, max_seq_len=256)
+        X_test = create_input_array(X_test, tokenizer, max_seq_len=256)
+        X_val = create_input_array(X_val, tokenizer, max_seq_len=256)
 
         train_ds = BERTDataset(transform_array(X_train), y_train)
         valid_ds = BERTDataset(transform_array(X_val), y_val)
         test_ds = BERTDataset(transform_array(X_test), y_test)
         batch_size = min(batch_size, 8)  # smaller size for BERT
-        import code
-        code.interact(local={**locals(), **globals()})
+        # import code
+        # code.interact(local={**locals(), **globals()})
 
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
