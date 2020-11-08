@@ -119,9 +119,9 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
             optimizer.step()
             sum_loss += loss.item()  # * y.shape[0]
             total += 1  # y.shape[0]
-            print(f"loss so far{sum_loss / total}")
-            import code
-            code.interact(local={**locals(), **globals()})
+            print(f"loss so far: {sum_loss / total}")
+        import code
+        code.interact(local={**locals(), **globals()})
 
         val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl, criterion=criterion)
         # if i % 5 == 1:
