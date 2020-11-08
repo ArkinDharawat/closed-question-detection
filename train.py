@@ -112,7 +112,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         total = 0
         for x, y, l in train_dl:
             x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
-            optimizer.zero_grad() # zero params
+            optimizer.zero_grad()  # zero params
             y_pred = model(x, l)
             loss = criterion(y_pred, y)
             loss.backward()
@@ -254,8 +254,8 @@ def run():
         valid_ds = BERTDataset(transform_array(X_val), y_val)
         test_ds = BERTDataset(transform_array(X_test), y_test)
         batch_size = min(batch_size, 8)  # smaller size for BERT
-        # import code
-        # code.interact(local={**locals(), **globals()})
+        import code
+        code.interact(local={**locals(), **globals()})
 
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
