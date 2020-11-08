@@ -112,13 +112,13 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         total = 0
         for x, y, l in train_dl:
             x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
-            optimizer.zero_grad()
+            optimizer.zero_grad() # zero params
             y_pred = model(x, l)
             loss = criterion(y_pred, y)
             loss.backward()
             optimizer.step()
-            sum_loss += loss.item() * y.shape[0]
-            total += y.shape[0]
+            sum_loss += loss.item()  # * y.shape[0]
+            total += 1  # y.shape[0]
         val_loss, val_acc, val_rmse = validation_metrics(model, valid_dl, criterion=criterion)
         # if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (
@@ -246,9 +246,9 @@ def run():
 
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        X_train = create_input_array(X_train, tokenizer, max_seq_len=256)
-        X_test = create_input_array(X_test, tokenizer, max_seq_len=256)
-        X_val = create_input_array(X_val, tokenizer, max_seq_len=256)
+        X_train = create_input_array(X_train, tokenizer, max_seq_len=128)
+        X_test = create_input_array(X_test, tokenizer, max_seq_len=128)
+        X_val = create_input_array(X_val, tokenizer, max_seq_len=128)
 
         train_ds = BERTDataset(transform_array(X_train), y_train)
         valid_ds = BERTDataset(transform_array(X_val), y_val)
