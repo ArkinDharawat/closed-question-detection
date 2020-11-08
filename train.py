@@ -194,7 +194,7 @@ def run():
     epochs = args.epochs
     batch_size = args.batch_size
     learning_rate = args.lr
-    model_type = args.model_type
+    model_type = args.model
 
     # set seed
     torch.manual_seed(random_seed)
