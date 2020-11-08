@@ -9,7 +9,8 @@ class BERTClassifier(nn.Module):
         configuration = BertConfig()
         self.bert_layer_size = configuration.hidden_size
         # value = bert-base-uncased
-        self.bert = BertModel.from_pretrained('lanwuwei/BERTOverflow_stackoverflow_github')
+        # lanwuwei/BERTOverflow_stackoverflow_github
+        self.bert = BertModel.from_pretrained('bert-base-uncased')
         self.dense_0 = nn.Linear(self.bert_layer_size, self.hidden_dim)
         self.relu = nn.ReLU()
         self.dropout_layer = nn.Dropout(p=dropout)

@@ -250,7 +250,7 @@ def run():
                                                       random_state=random_seed)
 
     if model_type == "BERT":
-        tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
+        tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
         # select train mini-batch, loss decreases
         X_train = create_input_array(X_train, tokenizer, max_seq_len=128)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=128)
@@ -295,7 +295,7 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        model = BERTClassifier(hidden_dim=128, dropout=0.4)
+        model = BERTClassifier(hidden_dim=128, dropout=0.7)
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
 
 
