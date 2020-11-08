@@ -130,7 +130,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         val_loss, val_acc = validation_metrics(model, valid_dl, criterion=criterion)
         # if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and train accuracy %.3f" % (
-            sum_loss / total, val_loss, correct / total))
+            sum_loss / total, val_loss, val_acc, correct / total))
     print("Testing model...")
     validation_metrics(model, test_dl, test_data=True, criterion=criterion)
 
