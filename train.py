@@ -146,20 +146,23 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
     sum_rmse = 0.0
     y_pred = []
     y_true = []
-    convert_to_np = lambda x: x.cpu().detach().numpy()  # convert to numpy on cpu
-    for x, y, l in dl_iter:
-        # if test_data:
-        #     print(torch.max(x), torch.min(x))
-        x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
-        y_hat = model(x, l)
-        loss = criterion(y_hat, y)
-        pred = torch.max(y_hat, 1)[1]
-        y_pred.extend(convert_to_np(pred))
-        y_true.extend(convert_to_np(y))
-        correct += (pred == y).float().sum()
-        total += y.shape[0]
-        sum_loss += loss.item() * y.shape[0]
 
+    def convert_to_np(arr):
+        return arr.cpu().detach().numpy()  # convert to numpy on cpu
+
+    with torch.no_grad():
+        for x, y, l in dl_iter:
+            # if test_data:
+            #     print(torch.max(x), torch.min(x))
+            x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
+            y_hat = model(x, l)
+            loss = criterion(y_hat, y)
+            pred = torch.max(y_hat, 1)[1]
+            y_pred.extend(convert_to_np(pred))
+            y_true.extend(convert_to_np(y))
+            correct += (pred == y).float().sum()
+            total += y.shape[0]
+            sum_loss += loss.item() * y.shape[0]
     if test_data:
         import code
         code.interact(local={**locals(), **globals()})
