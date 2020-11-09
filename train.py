@@ -156,6 +156,9 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
             #     print(torch.max(x), torch.min(x))
             x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
             y_hat = model(x, l)
+            # check the output values for each batch
+            import code
+            code.interact(local={**locals(), **globals()})
             loss = criterion(y_hat, y)
             pred = torch.max(y_hat, 1)[1]
             y_pred.extend(convert_to_np(pred))
@@ -164,8 +167,6 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
             total += y.shape[0]
             sum_loss += loss.item() * y.shape[0]
     if test_data:
-        import code
-        code.interact(local={**locals(), **globals()})
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='bert')
     else:
         return sum_loss / total, correct / total,
@@ -291,7 +292,10 @@ def run():
         print(f"Weights are {label_weights}")
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
-        criterion = FocalLoss(alpha=1.0, gamma=1, smooth=1e-5)
+        # gamma = 1 -> not working well
+        # gamma = 2, alpha = 0.25 ->
+        # gamma = 5 ->
+        criterion = FocalLoss(alpha=0.25, gamma=2, smooth=1e-5)
     else:
         criterion = nn.CrossEntropyLoss()
 
