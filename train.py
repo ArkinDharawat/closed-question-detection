@@ -275,8 +275,8 @@ def run():
         valid_ds = BERTDataset(transform_array(X_val), y_val)
         test_ds = BERTDataset(transform_array(X_test), y_test)
         # batch_size = min(batch_size, 32)  # smaller size for BERT
-        # import code
-        # code.interact(local={**locals(), **globals()})
+        import code
+        code.interact(local={**locals(), **globals()})
 
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
