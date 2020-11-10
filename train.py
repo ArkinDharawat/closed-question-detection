@@ -291,7 +291,7 @@ def run():
 
     if loss == 'WCE':
         # sklearn
-        class_weights = calculate_class_weights(labels, version=None)  # make class-weight
+        class_weights = calculate_class_weights(labels, version='probs')  # make class-weight
         label_weights = torch.Tensor(class_weights).to(device)  # make torch tensor
         print(f"Weights are {label_weights}")
         criterion = nn.CrossEntropyLoss(weight=label_weights)
