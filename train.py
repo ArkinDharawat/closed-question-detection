@@ -307,7 +307,7 @@ def run():
         # gamma = 1 -> not working well
         # gamma = 2, alpha = 0.25 ->
         # gamma = 5 ->
-        criterion = FocalLoss(alpha=0.8, gamma=2, smooth=1e-5)
+        criterion = FocalLoss(alpha=0.85, gamma=4, smooth=1e-5)
     else:
         criterion = nn.CrossEntropyLoss()
 
