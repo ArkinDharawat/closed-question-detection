@@ -314,9 +314,9 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        model = BERTClassifier(hidden_dim=128, dropout=0.7)
+        model = BERTClassifier(hidden_dim=128, dropout=0.5)
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
-    # python3 train.py --seed 12345 --loss WCE --epochs 4 --batch_size 64 --lr 2e-5 --model BERT
+    # python3 train.py --seed 12345 --loss WCE --epochs 2 --batch_size 64 --lr 2e-5 --model BERT
 
 if __name__ == '__main__':
     run()
