@@ -269,8 +269,8 @@ def run():
         valid_ds = BERTDataset(transform_array(X_val), y_val)
         test_ds = BERTDataset(transform_array(X_test), y_test)
         # batch_size = min(batch_size, 32)  # smaller size for BERT
-        import code
-        code.interact(local={**locals(), **globals()})
+        # import code
+        # code.interact(local={**locals(), **globals()})
 
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
@@ -309,7 +309,7 @@ def run():
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
         model = BERTClassifier(hidden_dim=128, dropout=0.7)
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
-
+    # python3 train.py --seed 12345 --loss WCE --epochs 4 --batch_size 64 --lr 2e-5 --model BERT
 
 if __name__ == '__main__':
     run()
