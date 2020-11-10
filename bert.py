@@ -10,7 +10,7 @@ class BERTClassifier(nn.Module):
         self.bert_layer_size = configuration.hidden_size
         # value = bert-base-uncased
         # lanwuwei/BERTOverflow_stackoverflow_github
-        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.bert = BertModel.from_pretrained('lanwuwei/BERTOverflow_stackoverflow_github')
         self.dense_0 = nn.Linear(self.bert_layer_size, self.hidden_dim)
         # self.activation_func = nn.ReLU()
         self.activation_func = nn.LeakyReLU()
