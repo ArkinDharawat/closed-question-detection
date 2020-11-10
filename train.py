@@ -305,7 +305,7 @@ def run():
         # gamma = 1 -> not working well
         # gamma = 2, alpha = 0.25 ->
         # gamma = 5 ->
-        criterion = FocalLoss(alpha=0.25, gamma=2, smooth=1e-5)
+        criterion = FocalLoss(alpha=1.0, gamma=2, smooth=1e-5)
     else:
         criterion = nn.CrossEntropyLoss()
 
@@ -316,7 +316,10 @@ def run():
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
         model = BERTClassifier(hidden_dim=128, dropout=0.5)
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
-    # python3 train.py --seed 12345 --loss WCE --epochs 2 --batch_size 64 --lr 2e-5 --model BERT
+    """
+    Best so far:
+    python3 train.py --seed 12345 --loss WCE --epochs 10 --batch_size 64 --lr 2e-5 --model BERT
+    """
 
 if __name__ == '__main__':
     run()
