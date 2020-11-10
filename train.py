@@ -302,6 +302,7 @@ def run():
         print(f"Weights are {label_weights}")
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
+        # alpha = 0.6 doesn't seem to work
         #  gamma = 0.5 ->
         # gamma = 1 -> not working well
         # gamma = 2, alpha = 0.25 ->
