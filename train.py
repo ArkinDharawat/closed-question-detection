@@ -104,8 +104,8 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
     if criterion is None:
         print("Cannot Train Model if Loss is None")
         return
-    # optimizer = torch.optim.Adam(parameters, lr=lr)
-    optimizer = torch.optim.AdamW(parameters, lr=lr)
+    optimizer = torch.optim.Adam(parameters, lr=lr)
+    # optimizer = torch.optim.AdamW(parameters, lr=lr)
     print("Training model...")
     for i in range(epochs):
         model.train()
@@ -308,7 +308,7 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        model = BERTClassifier(hidden_dim=256, dropout=0.7)
+        model = BERTClassifier(hidden_dim=128, dropout=0.7)
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     # python3 train.py --seed 12345 --loss WCE --epochs 4 --batch_size 64 --lr 2e-5 --model BERT
 
