@@ -99,6 +99,7 @@ def make_weight_matrix(target_vocab):
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criterion=None):
     print(USE_GPU)
+    path_to_params = "./bert_model_params"
     model.to(USE_GPU)
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     if criterion is None:
@@ -107,6 +108,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
     # optimizer = torch.optim.Adam(parameters, lr=lr)
     optimizer = torch.optim.AdamW(parameters, lr=lr)
     print("Training model...")
+    max_acc = 0.0
     for i in range(epochs):
         model.train()
         sum_loss = 0.0
@@ -128,10 +130,14 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
         # code.interact(local={**locals(), **globals()})
 
         val_loss, val_acc = validation_metrics(model, valid_dl, criterion=criterion)
+        if max_acc < val_acc:
+            max_acc = val_acc
+            torch.save(model.state_dict(), path_to_params) # save best model
         # if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and train accuracy %.3f" % (
             sum_loss / total, val_loss, val_acc, correct / total))
     print("Testing model...")
+    model = model.load_state_dict(torch.load(path_to_params))
     validation_metrics(model, test_dl, test_data=True, criterion=criterion)
 
 
