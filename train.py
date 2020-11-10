@@ -258,16 +258,17 @@ def run():
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
         # select train mini-batch, loss decreases
-        X_train = create_input_array(X_train, tokenizer, max_seq_len=128)
-        X_test = create_input_array(X_test, tokenizer, max_seq_len=128)
-        X_val = create_input_array(X_val, tokenizer, max_seq_len=128)
+        max_lenght = 8 # shorter length
+        X_train = create_input_array(X_train, tokenizer, max_seq_len=max_lenght)
+        X_test = create_input_array(X_test, tokenizer, max_seq_len=max_lenght)
+        X_val = create_input_array(X_val, tokenizer, max_seq_len=max_lenght)
 
         train_ds = BERTDataset(transform_array(X_train), y_train)
         valid_ds = BERTDataset(transform_array(X_val), y_val)
         test_ds = BERTDataset(transform_array(X_test), y_test)
         # batch_size = min(batch_size, 32)  # smaller size for BERT
-        # import code
-        # code.interact(local={**locals(), **globals()})
+        import code
+        code.interact(local={**locals(), **globals()})
 
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
