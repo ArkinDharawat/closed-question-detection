@@ -290,7 +290,8 @@ def run():
     test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
 
     if loss == 'WCE':
-        class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
+        # sklearn
+        class_weights = calculate_class_weights(labels, version=None)  # make class-weight
         label_weights = torch.Tensor(class_weights).to(device)  # make torch tensor
         print(f"Weights are {label_weights}")
         criterion = nn.CrossEntropyLoss(weight=label_weights)
