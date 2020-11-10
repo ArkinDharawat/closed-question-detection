@@ -123,7 +123,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
             total += y.shape[0]
             pred = torch.max(y_pred, 1)[1]
             correct += (pred == y).float().sum()
-            print(f"loss so far: {sum_loss / total}")
+            # print(f"loss so far: {sum_loss / total}")
         # import code
         # code.interact(local={**locals(), **globals()})
 
