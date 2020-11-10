@@ -264,7 +264,7 @@ def run():
                                                       random_state=random_seed)
 
     if model_type == "BERT":
-        tokenizer = AutoTokenizer.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
+        tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
         # select train mini-batch, loss decreases
         max_lenght = 8 # shorter length
         X_train = create_input_array(X_train, tokenizer, max_seq_len=max_lenght)

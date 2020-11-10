@@ -10,7 +10,7 @@ class BERTClassifier(nn.Module):
         self.bert_layer_size = configuration.hidden_size
         # value = bert-base-uncased
         # lanwuwei/BERTOverflow_stackoverflow_github
-        self.bert = BertModel.from_pretrained('lanwuwei/BERTOverflow_stackoverflow_github')
+        self.bert = BertModel.from_pretrained('bert-base-uncased')
         self.dense_0 = nn.Linear(self.bert_layer_size, self.hidden_dim)
         # self.activation_func = nn.ReLU()
         self.activation_func = nn.LeakyReLU()
@@ -22,7 +22,7 @@ class BERTClassifier(nn.Module):
         length argument not used in BERT
         """
         input_ids, token_type_ids, attn_mask = inputs.permute(1, 0, 2)
-        _, pooled_output, b = self.bert(input_ids, token_type_ids, attn_mask)
+        _, pooled_output = self.bert(input_ids, token_type_ids, attn_mask)
         # dense 0 + relu
         output = self.activation_func(self.dense_0(pooled_output))
         # dropout
