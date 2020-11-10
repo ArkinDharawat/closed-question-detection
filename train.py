@@ -157,8 +157,8 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
             x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
             y_hat = model(x, l)
             # check the output values for each batch
-            import code
-            code.interact(local={**locals(), **globals()})
+            # import code
+            # code.interact(local={**locals(), **globals()})
             loss = criterion(y_hat, y)
             pred = torch.max(y_hat, 1)[1]
             y_pred.extend(convert_to_np(pred))
@@ -167,6 +167,8 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
             total += y.shape[0]
             sum_loss += loss.item() * y.shape[0]
     if test_data:
+        import code
+        code.interact(local={**locals(), **globals()})
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='bert')
     else:
         return sum_loss / total, correct / total,
