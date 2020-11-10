@@ -104,8 +104,8 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
     if criterion is None:
         print("Cannot Train Model if Loss is None")
         return
-    optimizer = torch.optim.Adam(parameters, lr=lr)
-    # optimizer = torch.optim.AdamW(parameters, lr=lr)
+    # optimizer = torch.optim.Adam(parameters, lr=lr)
+    optimizer = torch.optim.AdamW(parameters, lr=lr)
     print("Training model...")
     for i in range(epochs):
         model.train()
