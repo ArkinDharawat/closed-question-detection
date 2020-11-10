@@ -291,7 +291,7 @@ def run():
 
     if loss == 'WCE':
         # sklearn
-        class_weights = calculate_class_weights(labels, version='probs')  # make class-weight
+        class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
         label_weights = torch.Tensor(class_weights).to(device)  # make torch tensor
         print(f"Weights are {label_weights}")
         criterion = nn.CrossEntropyLoss(weight=label_weights)
@@ -308,7 +308,7 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        model = BERTClassifier(hidden_dim=128, dropout=0.7)
+        model = BERTClassifier(hidden_dim=256, dropout=0.7)
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     # python3 train.py --seed 12345 --loss WCE --epochs 4 --batch_size 64 --lr 2e-5 --model BERT
 
