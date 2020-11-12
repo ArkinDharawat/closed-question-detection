@@ -266,7 +266,7 @@ def run():
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
         # select train mini-batch, loss decreases
-        max_lenght = 32 # shorter length
+        max_lenght = 64 # shorter length
         X_train = create_input_array(X_train, tokenizer, max_seq_len=max_lenght)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=max_lenght)
         X_val = create_input_array(X_val, tokenizer, max_seq_len=max_lenght)
@@ -307,7 +307,7 @@ def run():
         # gamma = 0.5 -> FL = .34, 10 epochs
         # gamma = 1 -> FL = .33, 15 epochs
         # gamma = 2 -> F1 = .29, 10 epochs
-        # gamma = 5
+        # gamma = 5 -> F1 = .31, 10 epochs
         class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
         criterion = FocalLoss(alpha=class_weights, gamma=5, smooth=1e-5)
     else:
