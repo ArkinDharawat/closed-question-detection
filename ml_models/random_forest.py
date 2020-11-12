@@ -9,14 +9,14 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.utils.class_weight import compute_class_weight
 
-from ml_models.tfidf_vectorize import build_tfidf_vectorizer
+from ml_models.tfidf_vectorize import build_vectorizer
 from model_metrics import get_metrics
 from ml_models.utils import FOLDER_PATH, calculate_class_weights
 import argparse
 
 
 def train_model():
-    parser = argparse.ArgumentParser(description='Train random forrest model')
+    parser = argparse.ArgumentParser(description='Train random forest model')
     parser.add_argument('--seed', type=int, help='set hyperparam seed')
     parser.add_argument('--tune', type=eval, choices=[True, False], default='False',
                         help='run grid search and tune hyperparams')
@@ -37,7 +37,7 @@ def train_model():
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
 
     # load vectorizers
-    title_vectorizer, body_vectorizer, tag_vectorizer = build_tfidf_vectorizer(df)
+    title_vectorizer, body_vectorizer, tag_vectorizer = build_vectorizer(df, 1)
 
     # features
     X_title = title_vectorizer.transform(q_titles).toarray()

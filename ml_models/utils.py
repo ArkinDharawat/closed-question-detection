@@ -3,7 +3,10 @@ import numpy as np
 from sklearn.utils import class_weight
 from collections import Counter
 
-FOLDER_PATH = "so_dataset"
+FOLDER_PATH = "..\\so_dataset"
+#FOLDER_PATH = "so_dataset"
+#I changed it to ..\\so_dataset because from the ml_models directory, I need to go back one step, then look for so_dataset
+#and take the so_questions_cleaned.csv file. Before, it didn't go back so it said file doesn't exist.
 
 
 def save_vecotrizer(path, vectorizer):
