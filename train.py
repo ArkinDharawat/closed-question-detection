@@ -266,7 +266,7 @@ def run():
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
         # select train mini-batch, loss decreases
-        max_lenght = 32 # shorter length
+        max_lenght = 64 # shorter length
         X_train = create_input_array(X_train, tokenizer, max_seq_len=max_lenght)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=max_lenght)
         X_val = create_input_array(X_val, tokenizer, max_seq_len=max_lenght)
@@ -303,7 +303,7 @@ def run():
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
         # alpha = 0.6 doesn't seem to work
-        #  alpha as class weights
+        # alpha as class weights
         # gamma = 0.5 -> FL
         # gamma = 1 -> FL = .33, 15 epochs
         # gamma = 2 -> F1 = .29, 10 epochs
@@ -321,6 +321,7 @@ def run():
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
     Best so far:
+    max length = 32
     python3 train.py --seed 12345 --loss WCE --epochs 10 --batch_size 64 --lr 2e-5 --model BERT
     """
 
