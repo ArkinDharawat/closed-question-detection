@@ -8,8 +8,8 @@ class BERTClassifier(nn.Module):
         self.hidden_dim = hidden_dim
         configuration = BertConfig()
         self.bert_layer_size = configuration.hidden_size
-        # value = bert-base-uncased
-        # lanwuwei/BERTOverflow_stackoverflow_github
+        # value = bert-base-uncased - better
+        # lanwuwei/BERTOverflow_stackoverflow_github - not good
         self.bert = BertModel.from_pretrained('bert-base-uncased')
         self.dense_0 = nn.Linear(self.bert_layer_size, self.hidden_dim)
         # self.activation_func = nn.ReLU()
