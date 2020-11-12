@@ -307,8 +307,9 @@ def run():
         # gamma = 0.5 -> FL = .34, 10 epochs
         # gamma = 1 -> FL = .33, 15 epochs
         # gamma = 2 -> F1 = .29, 10 epochs
+        # gamma = 5
         class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
-        criterion = FocalLoss(alpha=class_weights, gamma=0.5, smooth=1e-5)
+        criterion = FocalLoss(alpha=class_weights, gamma=5, smooth=1e-5)
     else:
         criterion = nn.CrossEntropyLoss()
 
