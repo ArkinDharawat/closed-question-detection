@@ -303,12 +303,12 @@ def run():
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
         # alpha = 0.6 doesn't seem to work
-        #  gamma = 0.5 ->
-        # gamma = 1 -> not working well
-        # gamma = 2, alpha = 0.25 ->
-        # gamma = 5 ->
+        #  alpha as class weights
+        # gamma = 0.5 -> FL
+        # gamma = 1 -> FL = .33, 15 epochs
+        # gamma = 2 -> F1 = .29, 10 epochs
         class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
-        criterion = FocalLoss(alpha=class_weights, gamma=1, smooth=1e-5)
+        criterion = FocalLoss(alpha=class_weights, gamma=0.5, smooth=1e-5)
     else:
         criterion = nn.CrossEntropyLoss()
 
