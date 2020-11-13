@@ -55,7 +55,7 @@ def make_weight_matrix(target_vocab):
     print(type(weights_matrix))
     return weights_matrix
 
-def train_model(model, train_dl, valid_dl, test_dl, epochs=2, lr=0.001, criterion=None):
+def train_model(model, train_dl, valid_dl, test_dl, epochs=30, lr=0.001, criterion=None):
     print(USE_GPU)
     model.to(USE_GPU)
     parameters = filter(lambda p: p.requires_grad, model.parameters())
