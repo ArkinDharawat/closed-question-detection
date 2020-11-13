@@ -52,7 +52,6 @@ def make_weight_matrix(target_vocab):
             words_found += 1
         except KeyError:
             weights_matrix[i] = np.random.normal(scale=0.6, size=(100, ))
-    print(type(weights_matrix))
     return weights_matrix
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=30, lr=0.001, criterion=None):
@@ -109,7 +108,6 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
         total += y.shape[0]
         sum_loss += loss.item() * y.shape[0]
         sum_rmse += np.sqrt(mean_squared_error(pred.cpu(), y.unsqueeze(-1).cpu())) * y.cpu().shape[0]
-    print(y_pred)
     if test_data:
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
     else:
@@ -137,7 +135,7 @@ def run():
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
     loss = 'WCE'  # 'CE', 'FL', 'WCE'
-    epochs = 10
+    epochs = 30
     batch_size = 32
 
     # read data
@@ -146,6 +144,7 @@ def run():
     q_bodies = df['body'].apply(lambda x: x.split('|'))
     q_titles = df['title'].apply(lambda x: x.split('|'))
     q_tags = df['tag_list'].apply(lambda x: x.split('|'))
+    labels = df['label']		
 
     counts = Counter()
     for rows in q_titles:
