@@ -318,12 +318,14 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        model = BERTClassifier(hidden_dim=128, dropout=0.5)
+        model = BERTClassifier(hidden_dim=128, dropout=0.3)
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
     Best so far:
     max length = 32
     python3 train.py --seed 12345 --loss WCE --epochs 10 --batch_size 64 --lr 2e-5 --model BERT
+    max length = 64
+    
     """
 
 if __name__ == '__main__':
