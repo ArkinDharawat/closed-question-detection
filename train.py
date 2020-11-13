@@ -27,11 +27,13 @@ from tqdm import tqdm
 
 USE_GPU = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def encode_sentence(text, vocab2index, N=250):
+def encode_sentence(text, vocab2index, N=64):
     encoded = np.zeros(N, dtype=int)
     enc1 = np.array([vocab2index.get(word, vocab2index["UNK"]) for word in text])
     length = min(N, len(enc1))
     encoded[:length] = enc1[:length]
+    print(encoded)
+    print(length)
     if length > 0:
         return encoded, length    
     
@@ -55,7 +57,7 @@ def make_weight_matrix(target_vocab):
     print(type(weights_matrix))
     return weights_matrix
 
-def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criterion=None):
+def train_model(model, train_dl, valid_dl, test_dl, epochs=2, lr=0.001, criterion=None):
     print(USE_GPU)
     model.to(USE_GPU)
     parameters = filter(lambda p: p.requires_grad, model.parameters())
@@ -109,7 +111,7 @@ def validation_metrics(model, valid_dl, test_data=False, criterion=None):
         total += y.shape[0]
         sum_loss += loss.item() * y.shape[0]
         sum_rmse += np.sqrt(mean_squared_error(pred.cpu(), y.unsqueeze(-1).cpu())) * y.cpu().shape[0]
-
+    print(y_pred)
     if test_data:
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='lstm')
     else:
@@ -136,8 +138,8 @@ def run():
     random_seed = 42
     train_test_split_ratio = 0.2
     train_val_split_ratio = .1
-    loss = 'FL'  # 'CE', 'FL', 'WCE'
-    epochs = 50
+    loss = 'WCE'  # 'CE', 'FL', 'WCE'
+    epochs = 10
     batch_size = 32
 
     # read data
@@ -162,10 +164,10 @@ def run():
         i += 1
 
     # TODO: assign features
-    # q_bodies.append(q_titles)
-    # q_bodies.append(q_tags)
+    q_bodies.append(q_titles)
+    q_bodies.append(q_tags)
 
-    X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
+    X = q_bodies.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
     y = labels
 
     # train-val-test split
