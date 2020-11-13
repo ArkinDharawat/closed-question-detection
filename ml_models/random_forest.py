@@ -37,7 +37,7 @@ def train_model():
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
 
     # load vectorizers
-    title_vectorizer, body_vectorizer, tag_vectorizer = build_vectorizer(df, 0)
+    title_vectorizer, body_vectorizer, tag_vectorizer = build_vectorizer(df, 1)
 
     # features
     X_title = title_vectorizer.transform(q_titles).toarray()

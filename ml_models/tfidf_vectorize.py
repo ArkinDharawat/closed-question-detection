@@ -56,7 +56,7 @@ def build_vectorizer(df, vectorizer):
         tag_vectorizer.fit(q_tags)
         save_vecotrizer('tag_vectorizer.pk', tag_vectorizer)
 
-    return title_vectorizer, body_vectorizer, tag_vecotrizer
+    return title_vectorizer, body_vectorizer, tag_vectorizer
 
 
 if __name__ == '__main__':
