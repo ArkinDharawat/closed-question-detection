@@ -69,7 +69,7 @@ class ValDataset(Dataset):
         return len(self.y)
 
     def __getitem__(self, idx):
-        return torch.from_numpy(self.X.iloc[idx][0].astype(np.int32)), self.y.iloc[idx], self.X.iloc[idx][1]
+        return torch.from_numpy(self.X.iloc[idx][0]), self.y.iloc[idx], self.X.iloc[idx][1]
 
 
 class LSTM_variable_input(torch.nn.Module):
