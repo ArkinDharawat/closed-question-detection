@@ -322,12 +322,10 @@ def run():
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
     Best so far:
-    max length = 32
-    python3 train.py --seed 12345 --loss WCE --epochs 10 --batch_size 64 --lr 2e-5 --model BERT
-    max length = 64
-    python3 train.py --seed 12345 --loss WCE --epochs 9 --batch_size 64 --lr 2e-5 --model BERT
-    droput=0.3
-    python3 train.py --seed 12345 --loss WCE --epochs 5 --batch_size 64 --lr 2e-5 --model BERT
+    -> max length = 32
+        python3 train.py --seed 12345 --loss WCE --epochs 10 --batch_size 64 --lr 2e-5 --model BERT
+    -> max length = 64, hidden=256
+        python3 train.py --seed 12345 --loss WCE --epochs 8 --batch_size 64 --lr 2e-5 --model BERT
     """
 
 if __name__ == '__main__':
