@@ -27,13 +27,11 @@ from tqdm import tqdm
 
 USE_GPU = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def encode_sentence(text, vocab2index, N=64):
+def encode_sentence(text, vocab2index, N=32):
     encoded = np.zeros(N, dtype=int)
     enc1 = np.array([vocab2index.get(word, vocab2index["UNK"]) for word in text])
     length = min(N, len(enc1))
     encoded[:length] = enc1[:length]
-    print(text)
-    print(length)
     if length > 0:
         return encoded, length    
     
