@@ -32,7 +32,7 @@ def encode_sentence(text, vocab2index, N=64):
     enc1 = np.array([vocab2index.get(word, vocab2index["UNK"]) for word in text])
     length = min(N, len(enc1))
     encoded[:length] = enc1[:length]
-    print(encoded)
+    print(text)
     print(length)
     if length > 0:
         return encoded, length    
@@ -148,7 +148,6 @@ def run():
     q_bodies = df['body'].apply(lambda x: x.split('|'))
     q_titles = df['title'].apply(lambda x: x.split('|'))
     q_tags = df['tag_list'].apply(lambda x: x.split('|'))
-    labels = df['label']
 
     counts = Counter()
     for rows in q_titles:
