@@ -3,7 +3,7 @@ import os
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer, HashingVectorizer
 
-from ml_models.utils import save_vecotrizer, FOLDER_PATH
+from ml_models.utils import save_vectorizer, FOLDER_PATH
 
 
 def build_vectorizer(df, vectorizer):
