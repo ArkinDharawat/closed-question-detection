@@ -7,7 +7,7 @@ FOLDER_PATH = "so_dataset"
 
 
 
-def save_vecotrizer(path, vectorizer):
+def save_vectorizer(path, vectorizer):
     with open(path, 'wb') as fin:
         pickle.dump(vectorizer, fin)
 
