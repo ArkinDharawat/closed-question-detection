@@ -28,7 +28,7 @@ def train_model():
     print()
     df_path = os.path.join(FOLDER_PATH, args.path)
 
-    train_test_split_ratio = 0.8
+    train_test_split_ratio = 0.7
 
     df = pd.read_csv(df_path)
 
