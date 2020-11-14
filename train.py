@@ -305,12 +305,12 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        model = BERTClassifier(hidden_dim=512, dropout=0.5)
+        model = BERTClassifier(hidden_dim=128, dropout=0.5)
     # TODO: Should be validation dl
     train_model(model, train_dl, test_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
     Best so far:
-    -> max length = 32
+    -> max length = 32, hidden=128
         python3 train.py --seed 12345 --loss WCE --epochs 10 --batch_size 64 --lr 2e-5 --model BERT
     -> max length = 64, hidden=256
         python3 train.py --seed 12345 --loss WCE --epochs 8 --batch_size 64 --lr 2e-5 --model BERT
