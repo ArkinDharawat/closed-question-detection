@@ -43,7 +43,7 @@ def build_vectorizer(df, vectorizer):
             sublinear_tf=True
         )  # get rid of 10% of tags
         tag_vectorizer.fit(q_tags)
-        save_vectorizer('tag_vectorizer.pk', tag_vecotrizer)
+        save_vectorizer('tag_vectorizer.pk', tag_vectorizer)
 
     elif vectorizer == 1:
         title_vectorizer = HashingVectorizer(n_features = 2000)
