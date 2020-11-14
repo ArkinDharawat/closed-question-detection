@@ -19,7 +19,7 @@ from torch.utils.data import TensorDataset, DataLoader, Dataset
 # import torch.nn.functional as F
 import string
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import f1_score
 from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
 from lstm import LSTM
@@ -74,6 +74,9 @@ def encode_sentence(text, vocab2index, N=250):
     if length > 0:
         return encoded, length
 
+def convert_to_np(arr):
+    return arr.cpu().detach().numpy()  # convert to numpy on cpu
+
 
 def create_emb_layer(weights_matrix):
     num_embeddings, embedding_dim = weights_matrix.shape
@@ -109,6 +112,8 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
     optimizer = torch.optim.AdamW(parameters, lr=lr)
     print("Training model...")
     max_acc = 0.0
+    y_pred = []
+    y_true = []
     for i in range(epochs):
         model.train()
         sum_loss = 0.0
@@ -122,19 +127,16 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
             loss.backward()
             optimizer.step()
             sum_loss += loss.item() * y.shape[0]
+            y_pred.extend(convert_to_np(pred))
+            y_true.extend(convert_to_np(y))
+
             total += y.shape[0]
             pred = torch.max(y_pred, 1)[1]
             correct += (pred == y).float().sum()
             # print(f"loss so far: {sum_loss / total}")
-        # import code
-        # code.interact(local={**locals(), **globals()})
 
         val_loss, val_acc = validation_metrics(model, valid_dl, criterion=criterion)
-        # if max_acc < val_acc:
-        #     max_acc = val_acc
-        #
-        # if i % 5 == 1:
-        print("train loss %.3f, val loss %.3f, val accuracy %.3f, and train accuracy %.3f" % (
+        print("train loss %.3f, val loss %.3f, val f1 %.3f, and train accuracy %.3f" % (
             sum_loss / total, val_loss, val_acc, correct / total))
     print("Testing model...")
 
@@ -152,9 +154,6 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
     sum_rmse = 0.0
     y_pred = []
     y_true = []
-
-    def convert_to_np(arr):
-        return arr.cpu().detach().numpy()  # convert to numpy on cpu
 
     with torch.no_grad():
         for x, y, l in dl_iter:
@@ -177,20 +176,13 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
         code.interact(local={**locals(), **globals()})
         get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='bert')
     else:
-        return sum_loss / total, correct / total,
+        f1_macro = f1_score(y_true, y_pred, average='macro')
+        return sum_loss / total, f1_macro
+        # return sum_loss / total, correct / total,
 
 
-def calculate_class_weights(labels, version='sklearn'):
-    if version == 'sklearn':
-        class_weights = class_weight.compute_class_weight('balanced', np.unique(labels), labels)
-    elif version == 'probs':
-        class_count = np.unique(labels, return_counts=True)[1]
-        class_weights = 1. / class_count
-    else:
-        # https://forums.fast.ai/t/correcting-class-imbalance-for-nlp/22152/6
-        counts = Counter(labels)
-        trn_weights = [count / len(labels) for idx, count in counts.items()]
-        class_weights = np.array([max(trn_weights) / value for value in trn_weights])
+def calculate_class_weights(labels):
+    class_weights = class_weight.compute_class_weight('balanced', np.unique(labels), labels)
     return class_weights  # make weights out of inverse counts
 
 
@@ -253,7 +245,7 @@ def run():
         # q_bodies.append(q_tags)
         X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
     elif model_type == "BERT":
-        X = q_titles + q_bodies + q_titles
+        X = q_titles + q_bodies + q_tags
 
     y = labels
 
@@ -297,7 +289,7 @@ def run():
 
     if loss == 'WCE':
         # sklearn
-        class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
+        class_weights = calculate_class_weights(labels)  # make class-weight
         label_weights = torch.Tensor(class_weights).to(device)  # make torch tensor
         print(f"Weights are {label_weights}")
         criterion = nn.CrossEntropyLoss(weight=label_weights)
@@ -308,7 +300,7 @@ def run():
         # gamma = 1 -> FL = .33, 15 epochs
         # gamma = 2 -> F1 = .29, 10 epochs
         # gamma = 5 -> F1 = .31, 10 epochs
-        class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
+        class_weights = calculate_class_weights(labels)  # make class-weight
         criterion = FocalLoss(alpha=class_weights, gamma=5, smooth=1e-5)
     else:
         criterion = nn.CrossEntropyLoss()
