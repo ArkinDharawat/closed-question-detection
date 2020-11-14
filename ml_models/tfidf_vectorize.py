@@ -46,13 +46,13 @@ def build_vectorizer(df, vectorizer):
         save_vecotrizer('tag_vectorizer.pk', tag_vecotrizer)
 
     elif vectorizer == 1:
-        title_vectorizer = HashingVectorizer()
+        title_vectorizer = HashingVectorizer(n_features = 2000)
         title_vectorizer.fit(q_titles)
         save_vecotrizer('title_vectorizer.pk', title_vectorizer)
-        body_vectorizer = HashingVectorizer()
+        body_vectorizer = HashingVectorizer(n_features = 2000)
         body_vectorizer.fit(q_bodies)
         save_vecotrizer('body_vectorizer.pk', body_vectorizer)
-        tag_vectorizer = HashingVectorizer()
+        tag_vectorizer = HashingVectorizer(n_features = 2000)
         tag_vectorizer.fit(q_tags)
         save_vecotrizer('tag_vectorizer.pk', tag_vectorizer)
 
