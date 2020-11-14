@@ -112,8 +112,6 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
     optimizer = torch.optim.AdamW(parameters, lr=lr)
     print("Training model...")
     max_acc = 0.0
-    y_pred = []
-    y_true = []
     for i in range(epochs):
         model.train()
         sum_loss = 0.0
@@ -127,9 +125,6 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criteri
             loss.backward()
             optimizer.step()
             sum_loss += loss.item() * y.shape[0]
-            y_pred.extend(convert_to_np(pred))
-            y_true.extend(convert_to_np(y))
-
             total += y.shape[0]
             pred = torch.max(y_pred, 1)[1]
             correct += (pred == y).float().sum()
