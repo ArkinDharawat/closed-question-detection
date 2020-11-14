@@ -22,7 +22,7 @@ def build_vectorizer(df, vectorizer):
             sublinear_tf=True
         )
         title_vectorizer.fit(q_titles)
-        save_vecotrizer('title_vectorizer.pk', title_vectorizer)
+        save_vectorizer('title_vectorizer.pk', title_vectorizer)
 
         # body vectorizer
         body_vectorizer = TfidfVectorizer(
@@ -33,7 +33,7 @@ def build_vectorizer(df, vectorizer):
             sublinear_tf=True
         )
         body_vectorizer.fit(q_bodies)
-        save_vecotrizer('body_vectorizer.pk', body_vectorizer)
+        save_vectorizer('body_vectorizer.pk', body_vectorizer)
 
         # title vectorizer
         tag_vectorizer = TfidfVectorizer(
