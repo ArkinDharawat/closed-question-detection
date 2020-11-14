@@ -253,7 +253,7 @@ def run():
         # q_bodies.append(q_tags)
         X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
     elif model_type == "BERT":
-        X = q_titles + q_bodies
+        X = q_titles + q_bodies + q_titles
 
     y = labels
 
