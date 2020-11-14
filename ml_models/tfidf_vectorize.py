@@ -36,14 +36,14 @@ def build_vectorizer(df, vectorizer):
         save_vecotrizer('body_vectorizer.pk', body_vectorizer)
 
         # title vectorizer
-        tag_vecotrizer = TfidfVectorizer(
+        tag_vectorizer = TfidfVectorizer(
             # max_features=500,
             # max_df=0.5,
             min_df=0.01,
             sublinear_tf=True
         )  # get rid of 10% of tags
-        tag_vecotrizer.fit(q_tags)
-        save_vecotrizer('tag_vectorizer.pk', tag_vecotrizer)
+        tag_vectorizer.fit(q_tags)
+        save_vectorizer('tag_vectorizer.pk', tag_vecotrizer)
 
     elif vectorizer == 1:
         title_vectorizer = HashingVectorizer(n_features = 2000)
