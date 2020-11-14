@@ -305,7 +305,7 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
         # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
-        model = BERTClassifier(hidden_dim=512, dropout=0.5)
+        model = BERTClassifier(hidden_dim=256, dropout=0.5)
     # TODO: Should be validation dl
     train_model(model, train_dl, test_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
