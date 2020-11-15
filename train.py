@@ -27,7 +27,7 @@ from tqdm import tqdm
 
 USE_GPU = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def encode_sentence(text, vocab2index, N=32):
+def encode_sentence(text, vocab2index, N=64):
     encoded = np.zeros(N, dtype=int)
     enc1 = np.array([vocab2index.get(word, vocab2index["UNK"]) for word in text])
     length = min(N, len(enc1))
@@ -80,6 +80,8 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=30, lr=0.001, criteri
         # if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (
             sum_loss / total, val_loss, val_acc, val_rmse))
+        if(val_acc > .4):
+            break
     validation_metrics(model, test_dl, test_data=True, criterion=criterion)
 
 
@@ -127,7 +129,7 @@ def calculate_class_weights(labels, version='sklearn'):
         class_weights = np.array([max(trn_weights) / value for value in trn_weights])
     return class_weights  # make weights out of inverse counts
 
-def run():
+def run(max_length = 64, dim = 256, layer_num = 2, alpha = .01):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(device)
     # set seed and any other hyper-parameters
@@ -163,7 +165,7 @@ def run():
     q_bodies.append(q_titles)
     q_bodies.append(q_tags)
 
-    X = q_bodies.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
+    X = q_bodies.apply(lambda x: np.array(encode_sentence(x, vocab2index, N = max_length)))
     y = labels
 
     # train-val-test split
@@ -198,10 +200,20 @@ def run():
 
     embedding, embedding_dim = create_emb_layer(make_weight_matrix(words))
 
-    model = LSTM(embedding = embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
+    model = LSTM(embedding = embedding, emb_dim=embedding_dim, dimension=dim, num_layers=layer_num)
     assert len(words) == len(vocab2index)
     print(f"Vocab size: {len(vocab2index)}")
-    train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=0.01, criterion=criterion)
+    train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=alpha, criterion=criterion)
 
 if __name__ == '__main__':
-    run()
+    lr = [.0001, .001, .01]
+    dim = [128, 256, 512]
+    num_layers = [2, 3, 4]
+    max_length = [32, 64, 128]
+    for alpha in lr:
+        for d in dim:
+            for layer in num_layers:
+                for length in max_length:
+                    print('test')
+                    print("learning rate " + str(alpha) + " dimensions " + str(d) + " layers " + str(layer) + " max length " + str(length))
+                    run(max_length = length, dim = d, layer_num = layer, alpha = alpha)
