@@ -37,7 +37,7 @@ def encode_sentence(text, vocab2index, N=64):
     
 def create_emb_layer(weights_matrix):
     num_embeddings, embedding_dim = weights_matrix.shape
-    return nn.Embedding.from_pretrained(torch.FloatTensor(weights_matrix).to(USE_GPU)), embedding_dim
+    return nn.Embedding.from_pretrained(weights_matrix.to(USE_GPU)), embedding_dim
 
 def make_weight_matrix(target_vocab):
     glove = torchtext.vocab.GloVe(name="6B", # trained on Wikipedia 2014 corpus
@@ -194,7 +194,7 @@ def run(max_length = 64, dim = 256, layer_num = 2, alpha = .01):
 
     if loss == 'WCE':
         class_weights = calculate_class_weights(labels, version='sklearn')  # make class-weight
-        label_weights = torch.Tensor(class_weights).to(device)  # make torch tensor
+        label_weights = class_weights.to(device)  # make torch tensor
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
         criterion = FocalLoss(alpha=0.6, gamma=2, smooth=1e-5)
