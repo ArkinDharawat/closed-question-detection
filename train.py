@@ -174,6 +174,7 @@ def run(max_length = 64, dim = 256, layer_num = 2, alpha = .01):
     X = q_bodies.apply(lambda x: np.array(encode_sentence(x, vocab2index, N = max_length)))
     y = labels
 
+    print('split')
     # train-val-test split
     X_training, X_test, y_training, y_test = train_test_split(X, y, test_size=train_test_split_ratio,
                                                               random_state=random_seed)
