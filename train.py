@@ -143,6 +143,7 @@ def run(max_length = 64, dim = 256, layer_num = 2, alpha = .01):
     epochs = 30
     batch_size = 32
 
+    print('data')
     # read data
     FOLDER_PATH = "so_dataset"
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned_rm_stopw.csv'))
@@ -155,6 +156,7 @@ def run(max_length = 64, dim = 256, layer_num = 2, alpha = .01):
     for rows in q_titles:
         counts.update([r.strip().lower() for r in rows if r.strip() != ""])
 
+    print('vocab')
     # creating vocabulary
     vocab2index = {"": 0, "UNK": 1}
     words = ["", "UNK"]
@@ -168,6 +170,7 @@ def run(max_length = 64, dim = 256, layer_num = 2, alpha = .01):
     q_bodies.append(q_titles)
     q_bodies.append(q_tags)
 
+    print('encode')
     X = q_bodies.apply(lambda x: np.array(encode_sentence(x, vocab2index, N = max_length)))
     y = labels
 
