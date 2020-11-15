@@ -37,7 +37,7 @@ def encode_sentence(text, vocab2index, N=64):
     
 def create_emb_layer(weights_matrix):
     num_embeddings, embedding_dim = weights_matrix.shape
-    return nn.Embedding.from_pretrained(torch.FloatTensor(weights_matrix)), embedding_dim
+    return nn.Embedding.from_pretrained(torch.FloatTensor(weights_matrix).to(USE_GPU)), embedding_dim
 
 def make_weight_matrix(target_vocab):
     glove = torchtext.vocab.GloVe(name="6B", # trained on Wikipedia 2014 corpus
