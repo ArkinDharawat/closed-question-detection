@@ -194,6 +194,8 @@ def run(max_length = 64, dim = 256, layer_num = 2, alpha = .01):
     train_ds = ValDataset(X_train, y_train)
     valid_ds = ValDataset(X_val, y_val)
     test_ds = ValDataset(X_test, y_test)
+
+    print('loader1')
     train_dl = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
     val_dl = DataLoader(valid_ds, batch_size=batch_size, shuffle=True)
     test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
