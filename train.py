@@ -55,8 +55,11 @@ def make_weight_matrix(target_vocab):
     return weights_matrix
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=30, lr=0.001, criterion=None):
+    print('here')
     print(USE_GPU)
+    print('here1')
     model.to(USE_GPU)
+    print('here2')
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     if criterion is None:
         print("Cannot Train Model if Loss is None")
@@ -80,7 +83,7 @@ def train_model(model, train_dl, valid_dl, test_dl, epochs=30, lr=0.001, criteri
         # if i % 5 == 1:
         print("train loss %.3f, val loss %.3f, val accuracy %.3f, and val rmse %.3f" % (
             sum_loss / total, val_loss, val_acc, val_rmse))
-        if(val_acc > .4):
+        if(val_acc >.35):
             break
     validation_metrics(model, test_dl, test_data=True, criterion=criterion)
 
