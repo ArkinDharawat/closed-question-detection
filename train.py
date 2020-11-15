@@ -189,6 +189,8 @@ def run(max_length = 64, dim = 256, layer_num = 2, alpha = .01):
     y_val.reset_index(drop=True)
     y_test.reset_index(drop=True)
 
+    print('dataloader')
+
     train_ds = ValDataset(X_train, y_train)
     valid_ds = ValDataset(X_val, y_val)
     test_ds = ValDataset(X_test, y_test)
