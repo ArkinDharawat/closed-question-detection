@@ -10,7 +10,7 @@ def get_metrics(y_pred, y_true, save_dir, model_name):
     folder_path = os.path.join(save_dir, model_name)  # models/model_name
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
-    filepath = os.path.join(folder_path, "metrics.txt")
+    filepath = os.path.join(folder_path, "bert_best_13-11-20/metrics.txt")
     cm = confusion_matrix(y_true=y_true, y_pred=y_pred, normalize='true')
     with open(filepath, "w") as fobj:
         fobj.write(f'=============== {model_name} ===============\n')
