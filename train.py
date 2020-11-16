@@ -74,6 +74,7 @@ def encode_sentence(text, vocab2index, N=250):
     if length > 0:
         return encoded, length
 
+
 def convert_to_np(arr):
     return arr.cpu().detach().numpy()  # convert to numpy on cpu
 
@@ -240,7 +241,7 @@ def run():
         # q_bodies.append(q_tags)
         X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
     elif model_type == "BERT":
-        X = q_titles + q_bodies # + q_tags
+        X = q_titles + q_bodies  # + q_tags
 
     y = labels
 
@@ -253,7 +254,7 @@ def run():
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
         # select train mini-batch, loss decreases
-        max_lenght = 82 # shorter length
+        max_lenght = 64  # shorter length
         X_train = create_input_array(X_train, tokenizer, max_seq_len=max_lenght)
         X_test = create_input_array(X_test, tokenizer, max_seq_len=max_lenght)
         X_val = create_input_array(X_val, tokenizer, max_seq_len=max_lenght)
@@ -315,6 +316,7 @@ def run():
     -> max length = 64, hidden=256
         python3 train.py --seed 12345 --loss WCE --epochs 8 --batch_size 64 --lr 2e-5 --model BERT
     """
+
 
 if __name__ == '__main__':
     run()
