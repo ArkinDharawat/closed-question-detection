@@ -15,7 +15,7 @@ if __name__ == '__main__':
         indices = df[df['label'] == label].index
         titles = df['title'].iloc[indices]
         # bodies = df['body'].iloc[indices]
-        tags = df['tags'].iloc[indices]
+        tags = df['tag_list'].iloc[indices]
 
         print("Some Sample titles:")
         for index in titles.sample(n=sample_size, random_state=10101).index:
