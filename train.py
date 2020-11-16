@@ -51,7 +51,7 @@ def create_input_array(sentences, tokenizer, max_seq_len=None):
             sent,  # Sentence to encode.
             add_special_tokens=True,  # Add '[CLS]' and '[SEP]'
             max_length=max_seq_len,  # Pad & truncate all sentences.
-            pad_to_max_length=True,
+            pad_to_max_length=False,
             truncation=True,
             return_attention_mask=True)  # Construct attn. masks.
         # return_tensors='tf',  # Return tf tensors.
