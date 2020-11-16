@@ -7,15 +7,15 @@ FOLDER_PATH = "so_dataset"
 
 if __name__ == '__main__':
     df = pd.read_csv(os.path.join(FOLDER_PATH, "so_questions_labelled.csv"))
-    label_types = df['label'].unique()
+    label_types = df['Label'].unique()
     sample_size = 3
 
     for label in label_types:
         print(label)
-        indices = df[df['label'] == label].index
-        titles = df['title'].iloc[indices]
+        indices = df[df['Label'] == label].index
+        titles = df['Title'].iloc[indices]
         # bodies = df['body'].iloc[indices]
-        tags = df['tag_list'].iloc[indices]
+        tags = df['Tags'].iloc[indices]
 
         print("Some Sample titles:")
         for index in titles.sample(n=sample_size, random_state=10101).index:
