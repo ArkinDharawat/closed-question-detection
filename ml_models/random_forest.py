@@ -18,14 +18,13 @@ def train_model():
     parser.add_argument('--tune', type=eval, choices=[True, False], default='False',
                         help='run grid search and tune hyperparams')
     parser.add_argument('--vectorizer', type=int, help='set vectorizer to use, 0 for tfidf anything else is hashing')
-    parser.add_argument('--path', type=str, help='path to dataframe')
 
     args = parser.parse_args()
     random_seed = args.seed
     hyperparam_tune = args.tune
     vectorizer = args.vectorizer
     print()
-    df_path = os.path.join(FOLDER_PATH, args.path)
+    df_path = os.path.join(FOLDER_PATH, "so_questions_cleaned_rm_stopw.csv")
 
     train_test_split_ratio = 0.8
 

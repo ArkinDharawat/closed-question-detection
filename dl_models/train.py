@@ -96,13 +96,12 @@ def make_weight_matrix(target_vocab):
 
 def train_model(model, train_dl, valid_dl, test_dl, epochs=10, lr=0.001, criterion=None):
     print(USE_GPU)
-    path_to_params = "./bert_model_params"
     model.to(USE_GPU)
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     if criterion is None:
         print("Cannot Train Model if Loss is None")
         return
-    # optimizer = torch.optim.Adam(parameters, lr=lr)
+
     optimizer = torch.optim.AdamW(parameters, lr=lr)
     print("Training model...")
     max_acc = 0.0
@@ -140,7 +139,6 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
     correct = 0
     total = 0
     sum_loss = 0.0
-    sum_rmse = 0.0
     y_pred = []
     y_true = []
 
@@ -202,7 +200,7 @@ def run():
     print(device)
 
     # read data
-    FOLDER_PATH = "../so_dataset"
+    FOLDER_PATH = "so_dataset"
     # so_questions_cleaned_rm_stopw.csv
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
     q_bodies = df['body'].apply(lambda x: x.split('|'))
