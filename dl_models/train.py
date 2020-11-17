@@ -1,8 +1,5 @@
-import pandas as pd
 import os
-import numpy as np
 from sklearn.model_selection import train_test_split
-from collections import Counter
 import torchtext
 from transformers import *
 import argparse
@@ -12,18 +9,14 @@ import torch
 import torch.nn as nn
 import pandas as pd
 import numpy as np
-import re
-import spacy
 from collections import Counter
-from torch.utils.data import TensorDataset, DataLoader, Dataset
+from torch.utils.data import DataLoader
 # import torch.nn.functional as F
-import string
-from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from sklearn.metrics import f1_score
 from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
 from lstm import LSTM
-from bert import BERTClassifier
+from dl_models.bert import BERTClassifier
 from lstm import ValDataset, BERTDataset
 
 from tqdm import tqdm
@@ -168,9 +161,7 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
             total += y.shape[0]
             sum_loss += loss.item() * y.shape[0]
     if test_data:
-        import code
-        code.interact(local={**locals(), **globals()})
-        get_metrics(y_pred=y_pred, y_true=y_true, save_dir="./", model_name='bert')
+        get_metrics(y_pred=y_pred, y_true=y_true, save_dir="../", model_name='bert')
     else:
         f1_macro = f1_score(y_true, y_pred, average='macro')
         return sum_loss / total, f1_macro
@@ -211,7 +202,7 @@ def run():
     print(device)
 
     # read data
-    FOLDER_PATH = "so_dataset"
+    FOLDER_PATH = "../so_dataset"
     # so_questions_cleaned_rm_stopw.csv
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
     q_bodies = df['body'].apply(lambda x: x.split('|'))
