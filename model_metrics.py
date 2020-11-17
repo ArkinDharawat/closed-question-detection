@@ -21,7 +21,7 @@ def get_metrics(y_pred, y_true, save_dir, model_name):
         print(report)
         fobj.write(report)
 
-    # save confusin matrix
+    # save confusion matrix
     cm_plot_path = os.path.join(folder_path, "confusion_matrix_viz.png")
     ax = plt.subplot()
     sns.heatmap(cm, annot=True, ax=ax, cmap='Blues')
@@ -35,5 +35,4 @@ def get_metrics(y_pred, y_true, save_dir, model_name):
     ax.xaxis.set_ticklabels(display_labels)
 
     plt.savefig(cm_plot_path)
-
     return folder_path  # saved folder path

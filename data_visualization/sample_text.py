@@ -3,7 +3,7 @@ from collections import Counter
 
 import pandas as pd
 
-FOLDER_PATH = "../so_dataset"
+FOLDER_PATH = "so_dataset"
 
 if __name__ == '__main__':
     df = pd.read_csv(os.path.join(FOLDER_PATH, "so_questions_labelled.csv"))

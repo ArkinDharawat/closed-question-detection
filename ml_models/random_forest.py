@@ -9,16 +9,14 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.utils.class_weight import compute_class_weight
 
-from ml_models.tfidf_vectorize import build_tfidf_vectorizer
+from ml_models.tfidf_vectorize import build_vectorizer
 from model_metrics import get_metrics
-
+from ml_models.utils import FOLDER_PATH, calculate_class_weights
 import argparse
-
-FOLDER_PATH = "../so_dataset"
 
 
 def train_model():
-    parser = argparse.ArgumentParser(description='Train random forrest model')
+    parser = argparse.ArgumentParser(description='Train random forest model')
     parser.add_argument('--seed', type=int, help='set hyperparam seed')
     parser.add_argument('--tune', type=eval, choices=[True, False], default='False',
                         help='run grid search and tune hyperparams')
@@ -30,7 +28,7 @@ def train_model():
     print()
     df_path = os.path.join(FOLDER_PATH, args.path)
 
-    train_test_split_ratio = 0.8
+    train_test_split_ratio = 0.7
 
     df = pd.read_csv(df_path)
 
@@ -39,7 +37,7 @@ def train_model():
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
 
     # load vectorizers
-    title_vectorizer, body_vectorizer, tag_vectorizer = build_tfidf_vectorizer(df)
+    title_vectorizer, body_vectorizer, tag_vectorizer = build_vectorizer(df, 0)
 
     # features
     X_title = title_vectorizer.transform(q_titles).toarray()
@@ -57,17 +55,16 @@ def train_model():
 
     # train
     # class weights configured manually
-    class_weights = compute_class_weight(class_weight='balanced', classes=np.unique(y_train), y=y_train)
-    class_weights[0] = class_weights[0] * 0.001  # for 0th class
-    class_weights = dict(zip(np.unique(y_train), class_weights))
-    print(f"Class weights {class_weights}")
+    class_weights = calculate_class_weights(labels=y, version=None)
+    class_weights = dict(zip(range(5), class_weights))
+    print(f"Class weights: {class_weights}")
 
     if hyperparam_tune:
         model = RandomForestClassifier()
         tuning_parameters = {
             'n_estimators': [500, 1000, 2500],
-            'class_weight': ['balanced', 'balanced_subsample', class_weights],
-            'max_features': ['auto', 'sqrt']
+            'class_weight': ['balanced', 'balanced_subsample'],
+            'max_depth': [5, 10, 100],
         }
         clf = GridSearchCV(model,
                            tuning_parameters,
@@ -81,7 +78,9 @@ def train_model():
         print(clf.best_params_)
 
     else:
-        clf = RandomForestClassifier(n_estimators=500,
+        # Best weight strategy = 'balanced'
+        clf = RandomForestClassifier(n_estimators=2500,
+                                     max_depth=10,
                                      random_state=random_seed,
                                      n_jobs=-1,
                                      class_weight='balanced',
