@@ -10,7 +10,7 @@ def get_metrics(y_pred, y_true, save_dir, model_name):
     folder_path = os.path.join(save_dir, model_name)  # models/model_name
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
-    filepath = os.path.join(folder_path, "metrics.txt")
+    filepath = os.path.join(folder_path, model_name)
     cm = confusion_matrix(y_true=y_true, y_pred=y_pred, normalize='true')
     with open(filepath, "w") as fobj:
         fobj.write(f'=============== {model_name} ===============\n')
@@ -18,9 +18,10 @@ def get_metrics(y_pred, y_true, save_dir, model_name):
         fobj.write(np.array2string(cm))
         fobj.write("\n")
         report = classification_report(y_true, y_pred)  # Consider accuracy here and not macro-F1
+        print(report)
         fobj.write(report)
 
-    # save confusin matrix
+    # save confusion matrix
     cm_plot_path = os.path.join(folder_path, "confusion_matrix_viz.png")
     ax = plt.subplot()
     sns.heatmap(cm, annot=True, ax=ax, cmap='Blues')
@@ -32,8 +33,6 @@ def get_metrics(y_pred, y_true, save_dir, model_name):
 
     display_labels = ['open', 'off-topic', 'unclear', 'broad', 'opinion']
     ax.xaxis.set_ticklabels(display_labels)
-    ax.yaxis.set_ticklabels(display_labels)
 
     plt.savefig(cm_plot_path)
-
     return folder_path  # saved folder path
