@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 from collections import Counter
 from torch.utils.data import DataLoader
-# import torch.nn.functional as F
+
 from sklearn.metrics import f1_score
 from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
@@ -59,7 +59,11 @@ def create_input_array(sentences, tokenizer, max_seq_len=None):
     return [input_ids, attention_masks, token_type_ids]
 
 
-def encode_sentence(text, vocab2index, N=250):
+def convert_to_np(arr):
+    return arr.cpu().detach().numpy()  # convert to numpy on cpu
+
+
+def encode_sentence(text, vocab2index, N=64):
     encoded = np.zeros(N, dtype=int)
     enc1 = np.array([vocab2index.get(word, vocab2index["UNK"]) for word in text])
     length = min(N, len(enc1))
@@ -68,13 +72,9 @@ def encode_sentence(text, vocab2index, N=250):
         return encoded, length
 
 
-def convert_to_np(arr):
-    return arr.cpu().detach().numpy()  # convert to numpy on cpu
-
-
 def create_emb_layer(weights_matrix):
     num_embeddings, embedding_dim = weights_matrix.shape
-    return nn.Embedding.from_pretrained(torch.FloatTensor(weights_matrix)), embedding_dim
+    return nn.Embedding.from_pretrained(torch.FloatTensor(weights_matrix).to(USE_GPU)), embedding_dim
 
 
 def make_weight_matrix(target_vocab):
@@ -90,7 +90,6 @@ def make_weight_matrix(target_vocab):
             words_found += 1
         except KeyError:
             weights_matrix[i] = np.random.normal(scale=0.6, size=(100,))
-    print(type(weights_matrix))
     return weights_matrix
 
 
@@ -225,9 +224,8 @@ def run():
         assert len(words) == len(vocab2index)
         print(f"Vocab size: {len(vocab2index)}")
 
-        # TODO: assign features
-        # q_bodies.append(q_titles)
-        # q_bodies.append(q_tags)
+        q_bodies.append(q_titles)
+        q_bodies.append(q_tags)
         X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
     elif model_type == "BERT":
         X = q_titles + q_bodies + q_tags
@@ -288,7 +286,7 @@ def run():
 
     if model_type == 'LSTM':
         embedding, embedding_dim = create_emb_layer(make_weight_matrix(words))
-        model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
+        model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=128, num_layers=3)
     elif model_type == 'BERT':
         model = BERTClassifier(hidden_dim=128, dropout=0.5)
 
