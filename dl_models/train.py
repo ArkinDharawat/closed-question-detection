@@ -209,6 +209,9 @@ def run():
     q_tags = df['tag_list'].apply(lambda x: x.split('|'))
     labels = df['label']
 
+    # maximum length of sentences
+    max_length = 64  # shorter length
+
     if model_type != 'BERT':
         counts = Counter()
         for rows in q_titles:
@@ -228,7 +231,7 @@ def run():
 
         q_bodies.append(q_titles)
         q_bodies.append(q_tags)
-        X = q_titles.apply(lambda x: np.array(encode_sentence(x, vocab2index)))
+        X = q_bodies.apply(lambda x: np.array(encode_sentence(x, vocab2index, N=max_length)))
     elif model_type == "BERT":
         X = q_titles + q_bodies + q_tags
 
@@ -242,11 +245,9 @@ def run():
 
     if model_type == "BERT":
         tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-        # select train mini-batch, loss decreases
-        max_lenght = 64  # shorter length
-        X_train = create_input_array(X_train, tokenizer, max_seq_len=max_lenght)
-        X_test = create_input_array(X_test, tokenizer, max_seq_len=max_lenght)
-        X_val = create_input_array(X_val, tokenizer, max_seq_len=max_lenght)
+        X_train = create_input_array(X_train, tokenizer, max_seq_len=max_length)
+        X_test = create_input_array(X_test, tokenizer, max_seq_len=max_length)
+        X_val = create_input_array(X_val, tokenizer, max_seq_len=max_length)
 
         train_ds = BERTDataset(transform_array(X_train), y_train)
         valid_ds = BERTDataset(transform_array(X_val), y_val)
@@ -291,8 +292,8 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=hidden_dim, num_layers=3)
     elif model_type == 'BERT':
         model = BERTClassifier(hidden_dim=hidden_dim, dropout=0.5)
-    # TODO: rm valid dl
-    train_model(model, train_dl, test_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
+
+    train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
     Best so far:
     -> max length = 32, hidden=128
