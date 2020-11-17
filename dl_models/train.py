@@ -180,6 +180,7 @@ def run():
     parser.add_argument('--epochs', type=int, default=25, help='epochs to train')
     parser.add_argument('--batch_size', type=int, default=32, help='batches to train')
     parser.add_argument('--lr', type=float, default=0.01, help='learning rate of model')
+    parser.add_argument('--hidden_dim', type=float, default=128, help='hidden dimensiom of model')
     parser.add_argument('--model', type=str, default="LSTM", help='Should be BERT or LSTM')
     args = parser.parse_args()
 
@@ -188,6 +189,7 @@ def run():
     epochs = args.epochs
     batch_size = args.batch_size
     learning_rate = args.lr
+    hidden_dim = args.hidden_dim
     model_type = args.model
 
     # set seed
@@ -286,9 +288,9 @@ def run():
 
     if model_type == 'LSTM':
         embedding, embedding_dim = create_emb_layer(make_weight_matrix(words))
-        model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=128, num_layers=3)
+        model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=hidden_dim, num_layers=3)
     elif model_type == 'BERT':
-        model = BERTClassifier(hidden_dim=128, dropout=0.5)
+        model = BERTClassifier(hidden_dim=hidden_dim, dropout=0.5)
 
     train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
