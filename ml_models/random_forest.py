@@ -26,7 +26,7 @@ def train_model():
     print()
     df_path = os.path.join(FOLDER_PATH, args.path)
 
-    train_test_split_ratio = 0.7
+    train_test_split_ratio = 0.8
 
     df = pd.read_csv(df_path)
 
@@ -89,7 +89,6 @@ def train_model():
     y_pred = clf.predict(X_test)
 
     # generate metrics in folder
-    print(classification_report(y_test, y_pred))
     get_metrics(y_pred=y_pred, y_true=y_test, save_dir="./", model_name='rf_tfidf_model')
 
 
