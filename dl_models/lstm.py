@@ -42,7 +42,7 @@ class LSTM(nn.Module):
         self.fc = nn.Linear(2 * dimension, 5)
 
     def forward(self, text, text_len):
-        text_emb = self.embedding(text)  # .cuda()  # throw in raw text
+        text_emb = self.embedding(text)
 
         packed_input = pack_padded_sequence(text_emb, text_len, batch_first=True, enforce_sorted=False)
         packed_output, _ = self.lstm(packed_input)

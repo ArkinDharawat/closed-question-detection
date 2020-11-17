@@ -15,9 +15,9 @@ from torch.utils.data import DataLoader
 from sklearn.metrics import f1_score
 from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
-from lstm import LSTM
+from dl_models.lstm import LSTM
 from dl_models.bert import BERTClassifier
-from lstm import ValDataset, BERTDataset
+from dl_models.lstm import ValDataset, BERTDataset
 
 from tqdm import tqdm
 
