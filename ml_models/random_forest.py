@@ -53,11 +53,6 @@ def train_model():
     print(f"Test dataset {X_test.shape}, {y_test.shape}")
 
     # train
-    # class weights configured manually
-    class_weights = calculate_class_weights(labels=y, version=None)
-    class_weights = dict(zip(range(5), class_weights))
-    print(f"Class weights: {class_weights}")
-
     if hyperparam_tune:
         model = RandomForestClassifier()
         tuning_parameters = {
