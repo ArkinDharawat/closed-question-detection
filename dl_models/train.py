@@ -292,7 +292,7 @@ def run():
     elif model_type == 'BERT':
         model = BERTClassifier(hidden_dim=hidden_dim, dropout=0.5)
 
-    train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
+    train_model(model, train_dl, test_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
     Best so far:
     -> max length = 32, hidden=128
