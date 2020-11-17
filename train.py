@@ -262,9 +262,6 @@ def run():
         train_ds = BERTDataset(transform_array(X_train), y_train)
         valid_ds = BERTDataset(transform_array(X_val), y_val)
         test_ds = BERTDataset(transform_array(X_test), y_test)
-        # batch_size = min(batch_size, 32)  # smaller size for BERT
-        # import code
-        # code.interact(local={**locals(), **globals()})
 
     elif model_type == "LSTM":
         X_train.reset_index(drop=True)
@@ -290,7 +287,6 @@ def run():
         print(f"Weights are {label_weights}")
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
-        # alpha = 0.6 doesn't seem to work
         # alpha as class weights
         # gamma = 0.5 -> FL = .34, 10 epochs
         # gamma = 1 -> FL = .33, 15 epochs
@@ -305,10 +301,9 @@ def run():
         embedding, embedding_dim = create_emb_layer(make_weight_matrix(words))
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=256, num_layers=2)
     elif model_type == 'BERT':
-        # model = AutoModelForTokenClassification.from_pretrained("lanwuwei/BERTOverflow_stackoverflow_github")
         model = BERTClassifier(hidden_dim=128, dropout=0.5)
-    # TODO: Should be validation dl
-    train_model(model, train_dl, test_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
+
+    train_model(model, train_dl, val_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
     Best so far:
     -> max length = 32, hidden=128

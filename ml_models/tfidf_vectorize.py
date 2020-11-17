@@ -45,16 +45,16 @@ def build_vectorizer(df, vectorizer):
         tag_vectorizer.fit(q_tags)
         save_vectorizer('tag_vectorizer.pk', tag_vectorizer)
 
-    elif vectorizer == 1:
-        title_vectorizer = HashingVectorizer(n_features = 2000)
+    else:
+        title_vectorizer = HashingVectorizer(n_features=2000)
         title_vectorizer.fit(q_titles)
-        save_vecotrizer('title_vectorizer.pk', title_vectorizer)
-        body_vectorizer = HashingVectorizer(n_features = 2000)
+        save_vectorizer('title_vectorizer.pk', title_vectorizer)
+        body_vectorizer = HashingVectorizer(n_features=2000)
         body_vectorizer.fit(q_bodies)
-        save_vecotrizer('body_vectorizer.pk', body_vectorizer)
-        tag_vectorizer = HashingVectorizer(n_features = 2000)
+        save_vectorizer('body_vectorizer.pk', body_vectorizer)
+        tag_vectorizer = HashingVectorizer(n_features=2000)
         tag_vectorizer.fit(q_tags)
-        save_vecotrizer('tag_vectorizer.pk', tag_vectorizer)
+        save_vectorizer('tag_vectorizer.pk', tag_vectorizer)
 
     return title_vectorizer, body_vectorizer, tag_vectorizer
 

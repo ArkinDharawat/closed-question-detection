@@ -1,5 +1,5 @@
+import argparse
 import os
-import sys
 
 import numpy as np
 import pandas as pd
@@ -7,12 +7,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
-from sklearn.utils.class_weight import compute_class_weight
 
 from ml_models.tfidf_vectorize import build_vectorizer
-from model_metrics import get_metrics
 from ml_models.utils import FOLDER_PATH, calculate_class_weights
-import argparse
+from model_metrics import get_metrics
 
 
 def train_model():
