@@ -212,7 +212,7 @@ def run():
     # maximum length of sentences
     max_length = 64  # shorter length
 
-    if model_type != 'BERT':
+    if model_type == 'LSTM':
         counts = Counter()
         for rows in q_titles:
             counts.update([r.strip().lower() for r in rows if r.strip() != ""])
