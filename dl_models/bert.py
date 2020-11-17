@@ -11,9 +11,7 @@ class BERTClassifier(nn.Module):
         # value = bert-base-uncased - better
         # lanwuwei/BERTOverflow_stackoverflow_github - not good
         self.bert = BertModel.from_pretrained('bert-base-uncased')
-        import code
-        code.interact(local={**locals(), **globals()})
-        self.dense_0 = nn.Linear(int(self.bert_layer_size), self.hidden_dim)
+        self.dense_0 = nn.Linear(self.bert_layer_size, self.hidden_dim)
         # self.activation_func = nn.ReLU()
         self.activation_func = nn.ReLU()
         self.dropout_layer = nn.Dropout(p=dropout)

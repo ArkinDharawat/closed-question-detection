@@ -180,7 +180,7 @@ def run():
     parser.add_argument('--epochs', type=int, default=25, help='epochs to train')
     parser.add_argument('--batch_size', type=int, default=32, help='batches to train')
     parser.add_argument('--lr', type=float, default=0.01, help='learning rate of model')
-    parser.add_argument('--hidden_dim', type=float, default=128, help='hidden dimensiom of model')
+    parser.add_argument('--hidden_dim', type=int, default=128, help='hidden dimensiom of model')
     parser.add_argument('--model', type=str, default="LSTM", help='Should be BERT or LSTM')
     args = parser.parse_args()
 
@@ -291,7 +291,7 @@ def run():
         model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=hidden_dim, num_layers=3)
     elif model_type == 'BERT':
         model = BERTClassifier(hidden_dim=hidden_dim, dropout=0.5)
-
+    # TODO: rm valid dl
     train_model(model, train_dl, test_dl, test_dl, epochs=epochs, lr=learning_rate, criterion=criterion)
     """
     Best so far:
