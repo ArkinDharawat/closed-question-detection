@@ -7,8 +7,6 @@ from ml_models.utils import save_vectorizer, FOLDER_PATH
 
 
 def build_vectorizer(df, vectorizer):
-    # TODO - Aaron: Try out HashingVecotrizer
-    # TODO - Aaron: Look at: https://scikit-learn.org/0.15/auto_examples/document_classification_20newsgroups.html
     q_bodies = df['body'].apply(lambda x: x.replace('|', ' ').lower())
     q_titles = df['title'].apply(lambda x: x.replace('|', ' ').lower())
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
@@ -16,8 +14,6 @@ def build_vectorizer(df, vectorizer):
     if vectorizer == 0:
         # title vectorizer
         title_vectorizer = TfidfVectorizer(
-            # max_df=0.4,
-            # stop_words='english',
             min_df=0.001,
             sublinear_tf=True
         )
@@ -26,9 +22,6 @@ def build_vectorizer(df, vectorizer):
 
         # body vectorizer
         body_vectorizer = TfidfVectorizer(
-            # max_features=5000,
-            # max_df=0.4,
-            # stop_words='english',
             min_df=0.001,
             sublinear_tf=True
         )
@@ -37,8 +30,6 @@ def build_vectorizer(df, vectorizer):
 
         # title vectorizer
         tag_vectorizer = TfidfVectorizer(
-            # max_features=500,
-            # max_df=0.5,
             min_df=0.01,
             sublinear_tf=True
         )  # get rid of 10% of tags

@@ -4,7 +4,6 @@ import os
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
@@ -18,11 +17,13 @@ def train_model():
     parser.add_argument('--seed', type=int, help='set hyperparam seed')
     parser.add_argument('--tune', type=eval, choices=[True, False], default='False',
                         help='run grid search and tune hyperparams')
+    parser.add_argument('--vectorizer', type=int, help='set vectorizer to use, 0 for tfidf anything else is hashing')
     parser.add_argument('--path', type=str, help='path to dataframe')
 
     args = parser.parse_args()
     random_seed = args.seed
     hyperparam_tune = args.tune
+    vectorizer = args.vectorizer
     print()
     df_path = os.path.join(FOLDER_PATH, args.path)
 
@@ -35,7 +36,7 @@ def train_model():
     q_tags = df['tag_list'].apply(lambda x: x.replace('|', ' ').lower())
 
     # load vectorizers
-    title_vectorizer, body_vectorizer, tag_vectorizer = build_vectorizer(df, 0)
+    title_vectorizer, body_vectorizer, tag_vectorizer = build_vectorizer(df, vectorizer)
 
     # features
     X_title = title_vectorizer.transform(q_titles).toarray()
