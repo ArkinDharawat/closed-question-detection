@@ -17,7 +17,7 @@ from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
 from dl_models.lstm import LSTM
 from dl_models.bert import BERTClassifier
-from dl_models.lstm import ValDataset, BERTDataset
+from dl_models.dataset_classes import ValDataset, BERTDataset
 
 from tqdm import tqdm
 
@@ -143,13 +143,9 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
 
     with torch.no_grad():
         for x, y, l in dl_iter:
-            # if test_data:
-            #     print(torch.max(x), torch.min(x))
             x, y = x.long().to(USE_GPU), y.long().to(USE_GPU)
             y_hat = model(x, l)
             # check the output values for each batch
-            # import code
-            # code.interact(local={**locals(), **globals()})
             loss = criterion(y_hat, y)
             pred = torch.max(y_hat, 1)[1]
             y_pred.extend(convert_to_np(pred))

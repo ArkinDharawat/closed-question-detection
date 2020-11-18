@@ -60,43 +60,19 @@ class LSTM(nn.Module):
         return text_fea
 
 
-class BERTDataset(Dataset):
-    def __init__(self, X, Y):
-        self.X = X
-        self.y = Y
-
-    def __len__(self):
-        return len(self.y)
-
-    def __getitem__(self, idx):
-        return self.X[idx], self.y.iloc[idx], 0  # length not needed for BERT
-
-
-class ValDataset(Dataset):
-    def __init__(self, X, Y):
-        self.X = X
-        self.y = Y
-
-    def __len__(self):
-        return len(self.y)
-
-    def __getitem__(self, idx):
-        return torch.from_numpy(self.X.iloc[idx][0].astype(np.int32)), self.y.iloc[idx], self.X.iloc[idx][1]
-
-
-class LSTM_variable_input(torch.nn.Module):
-    def __init__(self, vocab_size, embedding_dim, hidden_dim):
-        super().__init__()
-        self.hidden_dim = hidden_dim
-        self.dropout = nn.Dropout(0.3)
-        self.embeddings = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)
-        self.lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
-        self.linear = nn.Linear(hidden_dim, 5)
-
-    def forward(self, x, s):
-        x = self.embeddings(x)
-        x = self.dropout(x)
-        x_pack = pack_padded_sequence(x, s, batch_first=True, enforce_sorted=False).cuda()
-        out_pack, (ht, ct) = self.lstm(x_pack).cuda()
-        out = self.linear(ht[-1]).cuda()
-        return out
+# class LSTM_variable_input(torch.nn.Module):
+#     def __init__(self, vocab_size, embedding_dim, hidden_dim):
+#         super().__init__()
+#         self.hidden_dim = hidden_dim
+#         self.dropout = nn.Dropout(0.3)
+#         self.embeddings = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)
+#         self.lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True)
+#         self.linear = nn.Linear(hidden_dim, 5)
+#
+#     def forward(self, x, s):
+#         x = self.embeddings(x)
+#         x = self.dropout(x)
+#         x_pack = pack_padded_sequence(x, s, batch_first=True, enforce_sorted=False).cuda()
+#         out_pack, (ht, ct) = self.lstm(x_pack).cuda()
+#         out = self.linear(ht[-1]).cuda()
+#         return out
