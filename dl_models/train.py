@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader
 from sklearn.metrics import f1_score
 from lossess.focal_loss import FocalLoss
 from sklearn.utils import class_weight
-from dl_models.lstm import LSTM
+from dl_models.lstm import LSTMClassifier
 from dl_models.bert import BERTClassifier
 from dl_models.dataset_classes import ValDataset, BERTDataset
 
@@ -272,7 +272,7 @@ def run():
 
     if model_type == 'LSTM':
         embedding, embedding_dim = create_emb_layer(make_weight_matrix(words))
-        model = LSTM(embedding=embedding, emb_dim=embedding_dim, dimension=hidden_dim, num_layers=3)
+        model = LSTMClassifier(embedding=embedding, emb_dim=embedding_dim, dimension=hidden_dim, num_layers=3)
     elif model_type == 'BERT':
         model = BERTClassifier(hidden_dim=hidden_dim, dropout=0.5)
 
