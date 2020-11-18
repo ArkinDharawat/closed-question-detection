@@ -8,7 +8,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
 from ml_models.tfidf_vectorize import build_vectorizer
-from ml_models.utils import FOLDER_PATH, calculate_class_weights
+from ml_models.utils import FOLDER_PATH
 from model_metrics import get_metrics
 
 
