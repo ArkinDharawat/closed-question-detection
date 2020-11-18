@@ -57,35 +57,3 @@ def get_tag_list(text):
     regex = r"<|>"  # "<.*?>.*?<\/.*?>"
     split_list = re.split(regex, text, maxsplit=0, flags=re.IGNORECASE)
     return TOKEN_SEP.join(filter(lambda x: x != '', map(lambda x: x.strip(), split_list)))
-
-# TODO: Remove these if not used anywhere
-# def remove_internal_tags(text):
-#     regex = r"<.*?>"  # "<.*?>.*?<\/.*?>"
-#     split_list = re.split(regex, text, maxsplit=0, flags=re.IGNORECASE)
-#     if len(split_list) == 0:
-#         # no regex to split on
-#         split_list = [text]
-#
-#     return map(lambda x: x.strip(), split_list)
-#
-#
-# def clean_body_regex(body_text):
-#     """Clean text of question body by extracting only <p></p> tags
-#     Args:
-#         body_text: the text of the body
-#     Returns: concatenated list of all text in the body
-#     """
-#     body_text = body_text.replace('\n', JOIN_CHAR).lower()  # replace new-lines with whitespace
-#     regex = r"<p>(.*?)<\/p>"
-#     text_only_str = []
-#     matches = re.findall(regex, body_text, flags=re.MULTILINE)
-#     for matchNum, match in enumerate(matches):
-#         p_tag_text = str(match)
-#         # for groupNum in range(0, len(match.groups())):
-#         #     groupNum = groupNum + 1
-#         #     p_tag_text = str(match.group(groupNum))  # get text between p-tags
-#         #     print(p_tag_text, groupNum)
-#         # print(p_tag_text, list(remove_internal_tags(p_tag_text)))
-#         text_only_str.extend(list(remove_internal_tags(p_tag_text)))  # add all str-lists together
-#
-#     return JOIN_CHAR.join(text_only_str)  # TODO: Join final string?

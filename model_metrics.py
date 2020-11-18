@@ -1,9 +1,9 @@
 import os
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, f1_score, precision_score, \
-    recall_score
+
+import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-import matplotlib.pyplot as plt
+from sklearn.metrics import classification_report, confusion_matrix
 
 
 def get_metrics(y_pred, y_true, save_dir, model_name):
