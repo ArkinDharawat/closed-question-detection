@@ -33,13 +33,6 @@ def create_input_array(sentences, tokenizer, max_seq_len=None):
     attention_masks = []
     token_type_ids = []
     for sent in tqdm(sentences):
-        # `encode_plus` will:
-        #   (1) Tokenize the sentence.
-        #   (2) Prepend the `[CLS]` token to the start.
-        #   (3) Append the `[SEP]` token to the end.
-        #   (4) Map tokens to their IDs.
-        #   (5) Pad or truncate the sentence to `max_length`
-        #   (6) Create attention masks for [PAD] tokens.
         encoded_dict = tokenizer.encode_plus(
             sent,  # Sentence to encode.
             add_special_tokens=True,  # Add '[CLS]' and '[SEP]'
@@ -158,7 +151,6 @@ def validation_metrics(model, dl_iter, test_data=False, criterion=None):
     else:
         f1_macro = f1_score(y_true, y_pred, average='macro')
         return sum_loss / total, f1_macro
-        # return sum_loss / total, correct / total,
 
 
 def calculate_class_weights(labels):
@@ -198,7 +190,6 @@ def run():
 
     # read data
     FOLDER_PATH = "so_dataset"
-    # so_questions_cleaned_rm_stopw.csv
     df = pd.read_csv(os.path.join(FOLDER_PATH, 'so_questions_cleaned.csv'))
     q_bodies = df['body'].apply(lambda x: x.split('|'))
     q_titles = df['title'].apply(lambda x: x.split('|'))
@@ -274,10 +265,6 @@ def run():
         criterion = nn.CrossEntropyLoss(weight=label_weights)
     elif loss == 'FL':
         # alpha as class weights
-        # gamma = 0.5 -> FL = .34, 10 epochs
-        # gamma = 1 -> FL = .33, 15 epochs
-        # gamma = 2 -> F1 = .29, 10 epochs
-        # gamma = 5 -> F1 = .31, 10 epochs
         class_weights = calculate_class_weights(labels)  # make class-weight
         criterion = FocalLoss(alpha=class_weights, gamma=5, smooth=1e-5)
     else:

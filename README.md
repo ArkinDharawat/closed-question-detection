@@ -1,4 +1,4 @@
-# closed-question-detection
+## Predicting Why Stack Overflow Posts Will BeClosed
 Stanford CS 229 Final project to predict if a Stack Overflow question will be closed.
 
 ### Members
